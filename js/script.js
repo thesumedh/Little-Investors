@@ -7,7 +7,7 @@ const LS = {
 // ===== NOVUS.AI EVENT TRACKING =====
 function track(event, props = {}) {
   try {
-    if (window.novus) window.novus.track(event, props);
+    if (window.pendo) window.pendo.track(event, props);
   } catch (e) {}
 }
 
