@@ -1,184 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Home</title>
-<link rel="stylesheet" href="/css/main.css">
-<link rel="stylesheet" href="/css/progress-bar.css">
-<link rel="stylesheet" href="/css/stockPage.css">
-<link rel="icon" type="image/x-icon" href="/img/penny_logo.png">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LittleInvestors — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="icon" type="image/x-icon" href="/img/penny_logo.png">
+  <style>
+    .portfolio-gain{font-size:13px;font-weight:600;color:#2AA46A;margin-top:4px}
+    .section-pad{padding:0 20px}
+    .notifs-wrap{padding:0 20px;margin-bottom:4px}
+  </style>
 </head>
 <body>
-    <div id = "header">
-        <a href = "./profile.ejs">
-            <div id = "coin">
-                <img id = "progressing" src = "/img/coin.png">     
-            </div>
-            <div class="container">
-                <div class="star-container">
-                    <img class="star" src="/img/star.png">
-                    <div class="level-number">0</div> <!-- The number only, centered on the star -->
-                </div>
-                <div class="progress-container">
-                    <div class="progress-bar">
-                        <div class="progress" id="progress"></div>
-                    </div>
-                </div>
-            </div>
-            <div id = "streak">
-                <img src = "/img/Vector 10.png">
-                <h1>30</h1>
-            </div>
-        </a>
-    </div>
-    <div id = "balance">
-        <h1>Your Current Balance</h1>
-        <div class = "cylinder">
-            <h3 class = "center">$800</h3>
-            <a> View Full History</a>
-        </div>
-    </div>
-    <div class = "notification">
-        <div class = "image-side">
-            <img src = "/img/Group 2325.png">
-        </div>
-        <div class = "text-side">
-            <h2>Mom sent you 50$</h2>
-            <h2 class = "unbolden">5:00pm Wednesday Oct 5</h2>
-        </div>
-        <div class = "cross">
-           <img src = "/img/Group 2344.png">
-        </div>
-        
-    </div>
-    <div class = "notification">
-        <div class = "image-side">
-            <img src = "/img/Group 2327.png">
-        </div>
-        <div class = "text-side">
-            <h2>Dad sent you 20$</h2>
-            <h2 class = "unbolden">9:00am Monday Oct 2</h2>
-        </div>
-        <div class = "cross">
-           <img src = "/img/Group 2344.png">
-        </div>
-        
-    </div>
-    <div class = "stocks">
-        <h1>How are your stocks doing?</h1>
-        <div class = "stock">
-            <div class = "image-side1">
-                <img src = "/img/Walmart.png">
-            </div>
-            <div class = "text-side1">
-                <h2>WMT</h2>
-                <h2 class = "unbolden">Walmart</h2>
-            </div>
-            <div class = "side2">
-                <h2><span class = "green">+$0.51 </span></h2>
-                <img src = "/img/next.png" id="dropdown">
-             </div>
-        </div>
-    </div>
-    <div class="stockPage">
-        <div style="flex-direction: column; padding-left: 20px; padding-top: 20px; padding-bottom: 20px;">
-            <div style="padding-bottom: 3px;">
-                <b>Name:</b> Walmart, <b>Symbol:</b> WMT
-            </div>
-            <div>
-                <span style="color: green"> <b>Price:</b> 80.94 , +$0.51 (0.63%) </span>
-            </div>
-        </div>
-    </div >
-    <div class = "stocks">
-        <div class = "stock">
-            <div class = "image-side1">
-                <img src = "/img/Apple.png">
-            </div>
-            <div class = "text-side1">
-                <h2>APPL</h2>
-                <h2 class = "unbolden">Apple</h2>
-            </div>
-            <div class = "side2">
-                <h2><span class = "green">+$1.13 </span></h2>
-                <img src = "/img/next.png" id="dropdown"> 
-             </div>
-        </div>
-    </div>
-    <div class="stockPage">
-        <div style="flex-direction: column; padding-left: 20px; padding-top: 20px; padding-bottom: 20px;">
-            <div>
-                <b>Name:</b> Apple, <b>Symbol:</b> AAPL
-            </div>
-            <div>
-                <span style="color: green"> <b>Price:</b> $226.80, +$1.13 (0.50%) </span>
-            </div>
-        </div>
-    </div>
-    <div class = "stocks">
-        <div class = "stock">
-            <div class = "image-side1">
-                <img src = "/img/Amazon.png">
-            </div>
-            <div class = "text-side1">
-                <h2>AMZN</h2>
-                <h2 class = "unbolden">Amazon</h2>
-            </div>
-            <div class = "side2">
-                <h2><span class = "green">+$4.55 </span></h2>
-                <img src = "/img/next.png" id="dropdown">
-             </div>
-        </div>
-    </div>
-    <div class="stockPage">
-        <div style="flex-direction: column; padding-left: 20px; padding-top: 20px; padding-bottom: 20px;">
-            <div>
-                <b>Name:</b> Amazon, <b>Symbol:</b> AMZN
-            </div>
-            <div>
-                <span style="color: green"> <b>Price:</b> $186.51, +$4.55 (2.50%) </span>
-            </div>
-        </div>
-    </div>
-    <div class = "stocks">
-        <div class = "stock">
-            <div class = "image-side1">
-                <img src = "/img/Lock.png">
-            </div>
-            <div class = "text-side2">
-                <h2 class = "unbolden">Unlock to Buy Another Stock</h2>
-            </div>
-            <div class = "side3">
-                <img src = "/img/coin.png">
-                <h2><span class = "diff">150 </span></h2>
-             </div>
-        </div>
-    </div>
-    <div class = "menu">
-        <img src = "/img/menu (5).png" >
-        <a href="./courses">    
-            <img src = "/img/menu (4).png">
-        </a>
-        
-        <a href="./">   
-            <img src = "/img/menu (3).png">
-        </a>
 
-        <a href="./chatbot">   
-            <img src = "/img/menu (2).png">
-        </a> 
-        
-        <img src = "/img/menu (1).png">
-
+<div id="header">
+  <a href="/home">
+    <div class="header-left">
+      <div id="coin"><img src="/img/coin.png" id="progressing" alt="coins"></div>
+      <span class="coin-amount" id="coinAmount">800</span>
     </div>
+    <div class="star-container">
+      <img class="star" src="/img/star.png" alt="level">
+      <div class="level-number" id="levelNum">0</div>
+    </div>
+    <div class="progress-container">
+      <div class="progress-bar"><div class="progress" id="progress"></div></div>
+    </div>
+    <div id="streak">
+      <img src="/img/Vector 10.png" alt="streak">
+      <h1 id="streakCount">30</h1>
+    </div>
+  </a>
+</div>
 
-    
+<div id="balance">
+  <h1>Your Current Balance</h1>
+  <div class="cylinder">
+    <h3 class="center" id="balanceDisplay">$<span id="balanceNum">0</span></h3>
+    <div class="balance-sub">
+      <div class="portfolio-gain" id="portfolioGain">📈 +$47.23 today</div>
+      <a onclick="showToast('Full history coming soon! 📊')">View Full History</a>
+    </div>
+  </div>
+</div>
 
-</body>
+<div class="notifs-wrap" id="notifWrap">
+  <div class="notification" id="notif1">
+    <div class="notif-icon">💸</div>
+    <div class="notif-body">
+      <div class="notif-title">Mom sent you $50!</div>
+      <div class="notif-sub">5:00pm · Wednesday Oct 5</div>
+    </div>
+    <span class="notif-close" onclick="dismissNotif('notif1')">×</span>
+  </div>
+  <div class="notification" id="notif2">
+    <div class="notif-icon">🎁</div>
+    <div class="notif-body">
+      <div class="notif-title">Dad sent you $20!</div>
+      <div class="notif-sub">9:00am · Monday Oct 2</div>
+    </div>
+    <span class="notif-close" onclick="dismissNotif('notif2')">×</span>
+  </div>
+</div>
+
+<div class="section-header">
+  <div class="section-title-sm">📈 Your Stocks</div>
+  <a href="/parent" class="parent-btn">👨‍👩‍👧 Parent Mode</a>
+</div>
+
+<div class="stocks-list">
+  <div class="stock" onclick="toggleStock('wmt')">
+    <div class="stock-logo"><img src="/img/Walmart.png" alt="WMT"></div>
+    <div class="stock-info"><div class="stock-ticker">WMT</div><div class="stock-name">Walmart</div></div>
+    <div class="stock-right"><div class="stock-price">$80.94</div><div class="stock-change green">+$0.51 (+0.6%)</div></div>
+  </div>
+  <div class="stock-detail" id="detail-wmt">
+    <div class="stock-detail-row"><span>Price</span><span style="font-weight:600">$80.94</span></div>
+    <div class="stock-detail-row"><span>You own</span><span style="font-weight:600" id="wmt-shares">0 shares</span></div>
+    <div class="stock-detail-row"><span>Value</span><span style="font-weight:600;color:#2AA46A" id="wmt-value">$0.00</span></div>
+    <div class="buy-sell-btns">
+      <button class="btn-buy" onclick="buySell('wmt',80.94,'buy')">Buy 1 Share</button>
+      <button class="btn-sell" onclick="buySell('wmt',80.94,'sell')">Sell</button>
+    </div>
+  </div>
+
+  <div class="stock" onclick="toggleStock('aapl')">
+    <div class="stock-logo"><img src="/img/Apple.png" alt="AAPL"></div>
+    <div class="stock-info"><div class="stock-ticker">AAPL</div><div class="stock-name">Apple</div></div>
+    <div class="stock-right"><div class="stock-price">$226.80</div><div class="stock-change green">+$1.13 (+0.5%)</div></div>
+  </div>
+  <div class="stock-detail" id="detail-aapl">
+    <div class="stock-detail-row"><span>Price</span><span style="font-weight:600">$226.80</span></div>
+    <div class="stock-detail-row"><span>You own</span><span style="font-weight:600" id="aapl-shares">0 shares</span></div>
+    <div class="stock-detail-row"><span>Value</span><span style="font-weight:600;color:#2AA46A" id="aapl-value">$0.00</span></div>
+    <div class="buy-sell-btns">
+      <button class="btn-buy" onclick="buySell('aapl',226.80,'buy')">Buy 1 Share</button>
+      <button class="btn-sell" onclick="buySell('aapl',226.80,'sell')">Sell</button>
+    </div>
+  </div>
+
+  <div class="stock" onclick="toggleStock('amzn')">
+    <div class="stock-logo"><img src="/img/Amazon.png" alt="AMZN"></div>
+    <div class="stock-info"><div class="stock-ticker">AMZN</div><div class="stock-name">Amazon</div></div>
+    <div class="stock-right"><div class="stock-price">$186.51</div><div class="stock-change green">+$4.55 (+2.5%)</div></div>
+  </div>
+  <div class="stock-detail" id="detail-amzn">
+    <div class="stock-detail-row"><span>Price</span><span style="font-weight:600">$186.51</span></div>
+    <div class="stock-detail-row"><span>You own</span><span style="font-weight:600" id="amzn-shares">0 shares</span></div>
+    <div class="stock-detail-row"><span>Value</span><span style="font-weight:600;color:#2AA46A" id="amzn-value">$0.00</span></div>
+    <div class="buy-sell-btns">
+      <button class="btn-buy" onclick="buySell('amzn',186.51,'buy')">Buy 1 Share</button>
+      <button class="btn-sell" onclick="buySell('amzn',186.51,'sell')">Sell</button>
+    </div>
+  </div>
+
+  <div class="lock-card">
+    <div style="font-size:22px">🔒</div>
+    <div class="lock-text">Unlock more stocks to diversify!</div>
+    <div class="lock-cost">🪙 150</div>
+  </div>
+</div>
+
+<nav class="menu">
+  <a href="/home" class="active"><img src="/img/menu (3).png" alt="home"><span class="menu-label">Home</span></a>
+  <a href="/courses"><img src="/img/menu (4).png" alt="courses"><span class="menu-label">Learn</span></a>
+  <a href="/chatbot"><img src="/img/menu (2).png" alt="chat"><span class="menu-label">Chat</span></a>
+  <a href="/parent"><img src="/img/menu (1).png" alt="parent"><span class="menu-label">Parent</span></a>
+</nav>
+
+<div class="toast" id="toast"></div>
+
 <script src="/js/script.js"></script>
-
+</body>
 </html>

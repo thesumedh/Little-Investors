@@ -1,110 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Course Page</title>
-<link rel="stylesheet" href="/css/main.css">
-<link rel="stylesheet" href="/css/progress-bar.css">
-<link rel="icon" type="image/x-icon" href="/img/penny_logo.png">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Courses — LittleInvestors</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="icon" type="image/x-icon" href="/img/penny_logo.png">
 </head>
 <body>
-    <div id = "header">
-        <a href = "./profile.ejs">
-            <div id = "coin">
-                <img id = "progressing" src = "/img/coin.png">     
-            </div>
-            <div class="container">
-                <div class="star-container">
-                    <img class="star" src="/img/star.png">
-                    <div class="level-number">0</div> <!-- The number only, centered on the star -->
-                </div>
-                <div class="progress-container">
-                    <div class="progress-bar">
-                        <div class="progress" id="progress"></div>
-                    </div>
-                </div>
-            </div>
-            <div id = "streak">
-                <img src = "/img/Vector 10.png">
-                <h1>30</h1>
-            </div>
-        </a>
-    </div> 
-    <div id = "basic">
-        <h1>Basics</h1>
-    </div>
-    <div class = "lesson">
-        <div class="imgside">
-            <img src = "/img/Coin grp.png">
-        </div>
-        <div class = "textside">
-            <h2>Resume Your Lesson</h2>
-            <h2 class = "unbolden">What is Money?</h2>
-        </div>
-        <a class = "side4" href="./course">
-            <img src = "/img/next.png" id="video_progress">
-        </a>
-    </div>
-    <div class="lockedless">
-        <div class="imgside1">
-            <img src = "/img/lockless.png">
-        </div>
-        <div class = "textside1">
-            <h2>Saving</h2>
-            
-        </div>
-    </div>
-    <div class="lockedless">
-        <div class="imgside1">
-            <img src = "/img/lockless.png">
-        </div>
-        <div class = "textside1">
-            <h2>Spending</h2>
-            
-        </div>
-    </div>
-    <div class="lockedless">
-        <div class="imgside1">
-            <img src = "/img/lockless.png">
-        </div>
-        <div class = "textside1">
-            <h2>Risk</h2>
-            
-        </div>
-    </div>
-    <div class="lockedless">
-        <div class="imgside1">
-            <img src = "/img/lockless.png">
-        </div>
-        <div class = "textside1">
-            <h2>Sharing</h2>
-            
-        </div>
-    </div>
-    <h1 id = "completion">1/5 Complete</h1>
-    <div class = "menu1">
-        <img src = "/img/menu (5).png" >
-        <a href="./courses">    
-            <img src = "/img/menu (4).png">
-        </a>
-        
-        <a href="./">   
-            <img src = "/img/menu (3).png">
-        </a>
 
-        <a href="./chatbot">   
-            <img src = "/img/menu (2).png">
-        </a> 
-        
-        <img src = "/img/menu (1).png">
+<div id="header">
+  <a href="/home">
+    <div class="header-left">
+      <div id="coin"><img src="/img/coin.png" id="progressing" alt="coins"></div>
+      <span class="coin-amount" id="coinAmount">800</span>
     </div>
-</body>
+    <div class="star-container">
+      <img class="star" src="/img/star.png" alt="level">
+      <div class="level-number" id="levelNum">0</div>
+    </div>
+    <div class="progress-container">
+      <div class="progress-bar"><div class="progress" id="progress"></div></div>
+    </div>
+    <div id="streak"><img src="/img/Vector 10.png" alt="streak"><h1 id="streakCount">30</h1></div>
+  </a>
+</div>
+
+<div class="course-header">
+  <h1>📚 Financial Basics</h1>
+  <p>5 lessons · ~20 minutes total</p>
+  <div class="progress-ring-wrap">
+    <div style="font-size:32px">🎯</div>
+    <div class="progress-ring-text">
+      <strong id="courseProgress">1/5</strong>
+      <span>Lessons Complete</span>
+    </div>
+    <div style="flex:1"></div>
+    <div style="text-align:right">
+      <div style="color:#f9a61b;font-weight:700;font-size:14px" id="xpTotal">100 XP</div>
+      <div style="color:#64748b;font-size:12px">earned</div>
+    </div>
+  </div>
+</div>
+
+<div style="padding:0 20px">
+  <a href="/course?lesson=1" class="lesson-card" id="lesson1card">
+    <div class="lesson-icon">🪙</div>
+    <div class="lesson-body">
+      <div class="lesson-tag">✅ Completed</div>
+      <div class="lesson-title">What is Money?</div>
+      <div class="lesson-meta">5 min · Quiz included</div>
+    </div>
+    <span class="lesson-arrow">›</span>
+  </a>
+
+  <a href="/course?lesson=2" class="lesson-card" id="lesson2card" style="opacity:.8">
+    <div class="lesson-icon">🐷</div>
+    <div class="lesson-body">
+      <div class="lesson-tag" style="color:#f9a61b">▶ Next Up</div>
+      <div class="lesson-title">Saving — Stack Your Coins</div>
+      <div class="lesson-meta">5 min · Quiz included</div>
+    </div>
+    <span class="lesson-arrow">›</span>
+  </a>
+
+  <div class="locked-card">
+    <div class="locked-icon">🛒</div>
+    <div style="flex:1"><div class="locked-title">Spending Wisely</div><div style="font-size:12px;color:#94a3b8;margin-top:2px">Complete Saving first</div></div>
+    <span class="locked-badge">🔒 Locked</span>
+  </div>
+
+  <div class="locked-card">
+    <div class="locked-icon">⚡</div>
+    <div style="flex:1"><div class="locked-title">Understanding Risk</div><div style="font-size:12px;color:#94a3b8;margin-top:2px">3 lessons to unlock</div></div>
+    <span class="locked-badge">🔒 Locked</span>
+  </div>
+
+  <div class="locked-card">
+    <div class="locked-icon">🌱</div>
+    <div style="flex:1"><div class="locked-title">Investing Basics</div><div style="font-size:12px;color:#94a3b8;margin-top:2px">4 lessons to unlock</div></div>
+    <span class="locked-badge">🔒 Locked</span>
+  </div>
+
+  <div class="completion-bar">
+    <div class="completion-text" id="completionText">1 of 5 complete — keep going! 🚀</div>
+    <div class="progress-bar" style="width:100%;height:8px">
+      <div class="progress" id="courseProgressBar" style="width:20%"></div>
+    </div>
+  </div>
+</div>
+
+<nav class="menu">
+  <a href="/home"><img src="/img/menu (3).png" alt="home"><span class="menu-label">Home</span></a>
+  <a href="/courses" class="active"><img src="/img/menu (4).png" alt="courses"><span class="menu-label">Learn</span></a>
+  <a href="/chatbot"><img src="/img/menu (2).png" alt="chat"><span class="menu-label">Chat</span></a>
+  <a href="/parent"><img src="/img/menu (1).png" alt="parent"><span class="menu-label">Parent</span></a>
+</nav>
+
+<div class="toast" id="toast"></div>
 <script src="/js/script.js"></script>
+</body>
 </html>
-
-    
-    

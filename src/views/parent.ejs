@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parent Mode — LittleInvestors</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="icon" type="image/x-icon" href="/img/penny_logo.png">
+</head>
+<body>
+
+<div class="parent-header">
+  <a href="/home" style="color:#94a3b8;text-decoration:none;font-size:14px;display:inline-flex;align-items:center;gap:6px;margin-bottom:12px">‹ Back to App</a>
+  <div class="parent-badge">👨‍👩‍👧 Parent Mode</div>
+  <h1>Family Dashboard</h1>
+  <p>Track your child's progress and send virtual allowances</p>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 20px;margin-bottom:12px">
+  <div class="stat-card" style="margin:0">
+    <h3>Balance</h3>
+    <div class="stat-val" id="parentBalance">$800</div>
+    <div class="stat-sub">child's account</div>
+  </div>
+  <div class="stat-card" style="margin:0">
+    <h3>Streak</h3>
+    <div class="stat-val">🔥 30</div>
+    <div class="stat-sub">days learning</div>
+  </div>
+  <div class="stat-card" style="margin:0">
+    <h3>XP Earned</h3>
+    <div class="stat-val" id="parentXP">100</div>
+    <div class="stat-sub">total experience</div>
+  </div>
+  <div class="stat-card" style="margin:0">
+    <h3>Level</h3>
+    <div class="stat-val" id="parentLevel">0</div>
+    <div class="stat-sub">investor level</div>
+  </div>
+</div>
+
+<div class="send-money-card">
+  <h3>💸 Send Virtual Allowance</h3>
+  <div class="amount-btns" id="amountBtns">
+    <button class="amount-btn" onclick="selectAmount(5,this)">$5</button>
+    <button class="amount-btn" onclick="selectAmount(10,this)">$10</button>
+    <button class="amount-btn" onclick="selectAmount(20,this)">$20</button>
+    <button class="amount-btn" onclick="selectAmount(50,this)">$50</button>
+  </div>
+  <p style="font-size:12px;color:#64748b;margin-bottom:12px">Selected: <strong id="selectedAmt">none</strong></p>
+  <button class="send-btn-big" onclick="sendMoney()">Send to Child 📤</button>
+</div>
+
+<div style="padding:0 20px 12px"><div style="font-size:14px;font-weight:700;color:#1a2332;margin-bottom:12px">📋 Recent Activity</div></div>
+<div class="activity-list" id="activityList">
+  <div class="activity-item">
+    <div class="activity-dot green">✅</div>
+    <div class="activity-info"><div class="activity-title">Completed: What is Money?</div><div class="activity-time">Today · +100 XP</div></div>
+    <div class="activity-val" style="color:#2AA46A">+100 XP</div>
+  </div>
+  <div class="activity-item">
+    <div class="activity-dot gold">🎯</div>
+    <div class="activity-info"><div class="activity-title">Quiz: What is Money?</div><div class="activity-time">Today · 3/3 correct</div></div>
+    <div class="activity-val" style="color:#f9a61b">100%</div>
+  </div>
+  <div class="activity-item">
+    <div class="activity-dot green">📈</div>
+    <div class="activity-info"><div class="activity-title">Bought 1 share of AAPL</div><div class="activity-time">Yesterday</div></div>
+    <div class="activity-val" style="color:#2AA46A">$226.80</div>
+  </div>
+</div>
+
+<div style="padding:20px">
+  <div style="background:#fef9ee;border:1px solid #fde68a;border-radius:16px;padding:16px;text-align:center">
+    <div style="font-size:24px;margin-bottom:8px">💡</div>
+    <div style="font-size:14px;font-weight:600;color:#92400e;margin-bottom:4px">Tip for Parents</div>
+    <div style="font-size:13px;color:#78350f;line-height:1.5">Research shows that kids who learn about money before 12 are more financially secure as adults. Keep encouraging your little investor!</div>
+  </div>
+</div>
+
+<nav class="menu">
+  <a href="/home"><img src="/img/menu (3).png" alt="home"><span class="menu-label">Home</span></a>
+  <a href="/courses"><img src="/img/menu (4).png" alt="courses"><span class="menu-label">Learn</span></a>
+  <a href="/chatbot"><img src="/img/menu (2).png" alt="chat"><span class="menu-label">Chat</span></a>
+  <a href="/parent" class="active"><img src="/img/menu (1).png" alt="parent"><span class="menu-label">Parent</span></a>
+</nav>
+
+<div class="toast" id="toast"></div>
+<script src="/js/script.js"></script>
+<script>
+let selectedAmount = 0;
+function selectAmount(amt, el) {
+  selectedAmount = amt;
+  document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('selectedAmt').textContent = '$' + amt;
+}
+function sendMoney() {
+  if (!selectedAmount) { showToast('Please select an amount first! 👆'); return; }
+  const bal = parseInt(localStorage.getItem('li_coins') || '800');
+  localStorage.setItem('li_coins', bal + selectedAmount);
+  document.getElementById('parentBalance').textContent = '$' + (bal + selectedAmount);
+  const list = document.getElementById('activityList');
+  const item = document.createElement('div');
+  item.className = 'activity-item';
+  item.style.animation = 'slideIn .3s ease';
+  item.innerHTML = `<div class="activity-dot green">💸</div><div class="activity-info"><div class="activity-title">You sent $${selectedAmount}</div><div class="activity-time">Just now</div></div><div class="activity-val" style="color:#2AA46A">+$${selectedAmount}</div>`;
+  list.prepend(item);
+  showToast(`✅ $${selectedAmount} sent to your child!`);
+  selectedAmount = 0;
+  document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('selectedAmt').textContent = 'none';
+}
+// Load stats from localStorage
+window.addEventListener('DOMContentLoaded', () => {
+  const xp = localStorage.getItem('li_xp') || '100';
+  const level = localStorage.getItem('li_level') || '0';
+  const coins = localStorage.getItem('li_coins') || '800';
+  document.getElementById('parentXP').textContent = xp;
+  document.getElementById('parentLevel').textContent = level;
+  document.getElementById('parentBalance').textContent = '$' + coins;
+});
+</script>
+</body>
+</html>

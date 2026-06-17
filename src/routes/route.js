@@ -2,20 +2,24 @@ const express = require('express');
 const route = express.Router();
 const mainController = require('../controller/mainController');
 const chatController = require('../controller/chatController');
-const { default: axios } = require('axios');
+const quizController = require('../controller/quizController');
 
-// Chat route
+// API routes
 route.post('/api/chat', chatController.handleChat);
+route.get('/api/quiz/:id', quizController.getQuizData);
 
-// Main routes
-route.get("/", mainController.home);
-route.get("/courses", mainController.courses);
-route.get("/chatbot", mainController.chatbot);
-route.get("/course", mainController.course);
+// Page routes
+route.get('/', mainController.landing);
+route.get('/home', mainController.home);
+route.get('/courses', mainController.courses);
+route.get('/chatbot', mainController.chatbot);
+route.get('/course', mainController.course);
+route.get('/quiz', quizController.getQuiz);
+route.get('/parent', mainController.parent);
 
-// Catch-all route
-route.all("/*", (req,res) => {
-    res.status(400).send({status: false, message: "Something isn't working"});
+// Catch-all
+route.all('/*', (req, res) => {
+    res.status(404).redirect('/');
 });
 
 module.exports = route;

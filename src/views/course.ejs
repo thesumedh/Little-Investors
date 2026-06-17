@@ -1,76 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Course</title>
-<link rel="stylesheet" href="/css/main.css">
-<link rel="stylesheet" href="/css/progress-bar.css">
-<link rel="icon" type="image/x-icon" href="/img/penny_logo.png">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= lesson.title %> — LittleInvestors</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="icon" type="image/x-icon" href="/img/penny_logo.png">
+  <style>
+    .xp-pill{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,#f9a61b,#f59e0b);color:#fff;padding:3px 12px;border-radius:99px;font-size:12px;font-weight:700;margin-bottom:8px}
+  </style>
 </head>
 <body>
-    <div id = "header">
-        <a href = "./profile.ejs">
-            <div id = "coin">
-                <img id = "progressing" src = "/img/coin.png">     
-            </div>
-            <div class="container">
-                <div class="star-container">
-                    <img class="star" src="/img/star.png">
-                    <div class="level-number">0</div> <!-- The number only, centered on the star -->
-                </div>
-                <div class="progress-container">
-                    <div class="progress-bar">
-                        <div class="progress" id="progress"></div>
-                    </div>
-                </div>
-            </div>
-            <div id = "streak">
-                <img src = "/img/Vector 10.png">
-                <h1>30</h1>
-            </div>
-        </a>
-    </div> 
-    <div class = "youtube ">
-        <iframe id="learn_video" src="https://www.youtube.com/embed/0iRbD5rM5qc?si=GZIx0KaSIa1KnHxv" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        <div class="desc">
-            <h1>What is Money?</h1>
-            <p>When you get some money, you don’t have to spend it all right away! You can put some of it in a special place, like a piggy bank or a savings jar. This way, you have money for later when you want something big, like a new toy.</p>
-            <div class="imgsshare">
-                <img src = "/img/share.png">
-                <img src = "/img/bookmark.png">
-            </div>
-        </div>
-        <button id = "video_button" style="background-color: #30a46c; color: white; font-weight: 600;">
-            Complete Section
-        </button>
-    </div>
-    <div class="upnext">
-        <h2>Up next</h2>
-        <h3>Saving-How to Stack Your Hay</h3>
-    </div>
-    <div class="nexts">
-        <img src = "/img/Back.png">
-        <img src = "/img/Group_2378.png">
-    </div>
-    <div class = "menu1">
-        <img src = "/img/menu (5).png" >
-        <a href="./courses">    
-            <img src = "/img/menu (4).png">
-        </a>
-        
-        <a href="./">   
-            <img src = "/img/menu (3).png">
-        </a>
 
-        <a href="./chatbot">   
-            <img src = "/img/menu (2).png">
-        </a> 
-        
-        <img src = "/img/menu (1).png">
+<div id="header">
+  <a href="/courses">
+    <div class="header-left" style="gap:6px">
+      <span style="font-size:22px;color:#64748b">‹</span>
+      <span style="font-size:14px;font-weight:600;color:#1a2332">Lessons</span>
     </div>
+    <div class="star-container">
+      <img class="star" src="/img/star.png" alt="level">
+      <div class="level-number" id="levelNum">0</div>
+    </div>
+    <div class="progress-container">
+      <div class="progress-bar"><div class="progress" id="progress"></div></div>
+    </div>
+    <div id="streak"><img src="/img/Vector 10.png" alt="streak"><h1 id="streakCount">30</h1></div>
+  </a>
+</div>
+
+<div class="lesson-video">
+  <iframe id="learn_video"
+    src="https://www.youtube.com/embed/<%= lesson.videoId %>?si=GZIx0KaSIa1KnHxv"
+    title="<%= lesson.title %>"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen>
+  </iframe>
+</div>
+
+<div class="lesson-content">
+  <div class="xp-pill">⭐ +<%= lesson.xp %> XP on completion</div>
+  <h1><%= lesson.title %></h1>
+  <p><%= lesson.description %></p>
+
+  <div class="lesson-actions" style="margin-top:16px;border-top:none;padding-top:0">
+    <a class="btn-action" onclick="shareLesson()">📤 Share</a>
+    <a class="btn-action" onclick="bookmarkLesson()">🔖 Bookmark</a>
+  </div>
+</div>
+
+<a href="/quiz?lesson=<%= lesson.id %>" class="complete-btn" id="video_button" onclick="completeLesson(<%= lesson.xp %>)">
+  ✅ Complete & Take Quiz →
+</a>
+
+<div class="up-next-section">
+  <h2>Up next</h2>
+  <div class="up-next-card">📘 <%= lesson.upNext %></div>
+</div>
+
+<nav class="menu">
+  <a href="/home"><img src="/img/menu (3).png" alt="home"><span class="menu-label">Home</span></a>
+  <a href="/courses" class="active"><img src="/img/menu (4).png" alt="courses"><span class="menu-label">Learn</span></a>
+  <a href="/chatbot"><img src="/img/menu (2).png" alt="chat"><span class="menu-label">Chat</span></a>
+  <a href="/parent"><img src="/img/menu (1).png" alt="parent"><span class="menu-label">Parent</span></a>
+</nav>
+
+<div class="toast" id="toast"></div>
 <script src="/js/script.js"></script>
+<script>
+function completeLesson(xp) {
+  const coins = parseInt(localStorage.getItem('li_coins') || '800');
+  localStorage.setItem('li_coins', coins + Math.floor(xp/10));
+  const totalXP = parseInt(localStorage.getItem('li_xp') || '0') + xp;
+  localStorage.setItem('li_xp', totalXP);
+  const level = Math.floor(totalXP / 200);
+  localStorage.setItem('li_level', level);
+  const width = (totalXP % 200) / 200 * 100;
+  localStorage.setItem('li_progress', width);
+}
+function shareLesson() { showToast('Link copied to clipboard! 📋'); }
+function bookmarkLesson() { showToast('Lesson bookmarked! 🔖'); }
+</script>
 </body>
+</html>
