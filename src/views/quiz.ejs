@@ -61,6 +61,7 @@
 
 <script>
 const quizData = <%- JSON.stringify(quiz.questions) %>;
+const quizTitle = <%- JSON.stringify(quiz.title) %>;
 let current = 0, score = 0, answered = false;
 
 function renderQuestion() {
@@ -94,6 +95,7 @@ function selectAnswer(i, correct, explanation) {
   fb.textContent = (isRight ? '✅ Correct! ' : '❌ Not quite. ') + explanation;
   fb.className = 'quiz-feedback show ' + (isRight ? 'good' : 'bad');
   document.getElementById('nextBtn').className = 'quiz-next-btn show';
+  try { if(window.pendo) window.pendo.track('quiz_answer_submitted', { question_index: current, is_correct: isRight, total_questions: quizData.length, selected_option_index: i, running_score: score }); } catch(e) {}
 }
 
 function nextQuestion() {
@@ -131,12 +133,11 @@ function showResult() {
       confetti({particleCount:60,spread:70,origin:{y:0.6},colors:['#2AA46A','#F9A61B']});
     }
   }
-  // Track quiz completion
-  try { if(window.pendo) window.pendo.track('quiz_completed', {score, total: quizData.length, xp}); } catch(e) {}
-  // Unlock achievements
   const quizDone = parseInt(localStorage.getItem('li_quizzes_done') || '0') + 1;
   localStorage.setItem('li_quizzes_done', quizDone);
   if (score === quizData.length) localStorage.setItem('li_ach_perfect_quiz', '1');
+  // Track quiz completion
+  try { if(window.pendo) window.pendo.track('quiz_completed', { score, total: quizData.length, xp, quiz_title: quizTitle, is_perfect_score: score === quizData.length, quizzes_completed_total: quizDone }); } catch(e) {}
 }
 
 function showToast(msg) {

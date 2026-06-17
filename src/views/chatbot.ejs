@@ -104,10 +104,14 @@ function showTyping() {
   return el;
 }
 
+let _isPreset = false;
+
 async function sendMessage() {
   const input = document.getElementById('chatInput');
   const msg = input.value.trim();
   if (!msg) return;
+  const wasPreset = _isPreset;
+  _isPreset = false;
   input.value = '';
   document.getElementById('chips').style.display = 'none';
   addMsg(msg, 'user');
@@ -121,6 +125,7 @@ async function sendMessage() {
     const data = await res.json();
     typing.remove();
     addMsg(data.message, 'ai');
+    try { if(window.pendo) window.pendo.track('chat_message_sent', { message_length: msg.length, is_preset: wasPreset, response_source: data.isFallback ? 'fallback' : 'ai' }); } catch(e) {}
   } catch(e) {
     typing.remove();
     addMsg("Oops! I'm having trouble connecting. Try again in a moment! 🔄", 'ai');
@@ -128,6 +133,7 @@ async function sendMessage() {
 }
 
 function sendPreset(q) {
+  _isPreset = true;
   document.getElementById('chatInput').value = q;
   sendMessage();
 }

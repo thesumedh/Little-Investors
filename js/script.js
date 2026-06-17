@@ -48,7 +48,7 @@ function unlockAchievement(id) {
   const a = ACHIEVEMENTS[id];
   if (!a) return;
   showAchievementPopup(a);
-  track('achievement_unlocked', { achievement: id });
+  track('achievement_unlocked', { achievement: id, achievement_title: a.title, total_achievements_earned: earned.length });
 }
 
 function showAchievementPopup(a) {
@@ -152,7 +152,9 @@ function dismissNotification(id) {
     LS.set('notifications', notifs);
   }, 300);
   
-  track('notification_dismissed', { id });
+  const notifs = LS.get('notifications', []);
+  const notif = notifs.find(n => n.id === id);
+  track('notification_dismissed', { id, notification_title: notif ? notif.title : '', notification_type: notif ? notif.icon : '' });
 }
 
 // ===== STOCK TOGGLE =====
@@ -162,7 +164,7 @@ function toggleStock(ticker) {
   const isOpen = el.classList.contains('open');
   document.querySelectorAll('.stock-detail').forEach(d => d.classList.remove('open'));
   if (!isOpen) { el.classList.add('open'); loadShareInfo(ticker); }
-  track('stock_viewed', { ticker });
+  track('stock_viewed', { ticker, stock_price: PRICES[ticker], shares_owned: LS.get('shares_' + ticker, 0) });
 }
 
 // ===== DYNAMIC LIVE STOCKS =====
@@ -229,7 +231,7 @@ function buySell(ticker, action) {
     LS.set('shares_' + ticker, shares + 1);
     LS.set('total_shares', prevShares + 1);
     showToast(`✅ Bought 1 ${ticker.toUpperCase()} share for $${price.toFixed(2)}!`);
-    track('stock_purchased', { ticker, price, action: 'buy' });
+    track('stock_purchased', { ticker, price, action: 'buy', shares_after_purchase: shares + 1, coin_balance_after: Math.round((coins - price) * 100) / 100, is_first_purchase: prevShares === 0 });
     if (prevShares === 0) {
       unlockAchievement('first_stock');
       launchConfetti();
@@ -239,7 +241,7 @@ function buySell(ticker, action) {
     LS.set('coins', Math.round((coins + price) * 100) / 100);
     LS.set('shares_' + ticker, shares - 1);
     showToast(`💰 Sold 1 ${ticker.toUpperCase()} share for $${price.toFixed(2)}!`);
-    track('stock_sold', { ticker, price, action: 'sell' });
+    track('stock_sold', { ticker, price, action: 'sell', shares_remaining: shares - 1, coin_balance_after: Math.round((coins + price) * 100) / 100 });
   }
   loadShareInfo(ticker);
   calculatePortfolioValue();
@@ -266,7 +268,7 @@ function completeLesson(xp) {
   const lessonsCompleted = LS.get('lessons_completed', 0) + 1;
   LS.set('lessons_completed', lessonsCompleted);
   if (lessonsCompleted === 1) unlockAchievement('first_lesson');
-  track('lesson_completed', { xp, total_lessons: lessonsCompleted });
+  track('lesson_completed', { xp, total_lessons: lessonsCompleted, new_level: newLevel, coins_earned: Math.floor(xp / 10) });
 }
 
 // ===== PREMIUM STOCKS LOCK =====
@@ -315,7 +317,7 @@ function unlockPremiumStocks() {
   launchConfetti();
   showToast("🎉 Premium Stocks Unlocked: Tesla, Google, & Microsoft!");
   initHeader();
-  track('premium_stocks_unlocked', { cost: 150 });
+  track('premium_stocks_unlocked', { cost: 150, coin_balance_after: Math.round((coins - 150) * 100) / 100 });
 }
 
 // ===== INIT =====

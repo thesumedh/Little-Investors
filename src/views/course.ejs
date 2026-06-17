@@ -93,8 +93,14 @@ function completeLesson(xp) {
   const width = (totalXP % 200) / 200 * 100;
   localStorage.setItem('li_progress', width);
 }
-function shareLesson() { showToast('Link copied to clipboard! 📋'); }
-function bookmarkLesson() { showToast('Lesson bookmarked! 🔖'); }
+function shareLesson() {
+  showToast('Link copied to clipboard! 📋');
+  try { if(window.pendo) window.pendo.track('lesson_shared', { lesson_id: <%- JSON.stringify(lesson.id) %>, lesson_title: <%- JSON.stringify(lesson.title) %> }); } catch(e) {}
+}
+function bookmarkLesson() {
+  showToast('Lesson bookmarked! 🔖');
+  try { if(window.pendo) window.pendo.track('lesson_bookmarked', { lesson_id: <%- JSON.stringify(lesson.id) %>, lesson_title: <%- JSON.stringify(lesson.title) %> }); } catch(e) {}
+}
 </script>
 </body>
 </html>

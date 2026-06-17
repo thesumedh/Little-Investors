@@ -147,6 +147,7 @@ function sendMoney() {
   item.innerHTML = `<div class="activity-dot green">💸</div><div class="activity-info"><div class="activity-title">Allowance sent</div><div class="activity-time">Just now</div></div><div class="activity-val" style="color:#2AA46A">+$${selectedAmount}</div>`;
   list.prepend(item);
   showToast(`✅ $${selectedAmount} sent to your child!`);
+  try { if(window.pendo) window.pendo.track('allowance_sent', { amount: selectedAmount, new_balance: bal + selectedAmount, preset_amount: selectedAmount }); } catch(e) {}
   selectedAmount = 0;
   document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('selectedAmt').textContent = 'none';
@@ -185,6 +186,7 @@ function sendCustomReward() {
   list.prepend(item);
   
   showToast(`✅ $${amt} custom reward sent!`);
+  try { if(window.pendo) window.pendo.track('custom_reward_sent', { amount: amt, has_custom_note: noteInput.value.trim() !== '', note_length: noteInput.value.trim().length, new_balance: bal + amt }); } catch(e) {}
   amtInput.value = '';
   noteInput.value = '';
 }
