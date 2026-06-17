@@ -7,6 +7,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/main.css">
   <link rel="icon" type="image/x-icon" href="/img/penny_logo.png">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <script>window.novusSettings={token:'YOUR_NOVUS_TOKEN'};(function(n,o,v,u,s){var a=n.novus=n.novus||{};a.track=a.track||function(){(a.q=a.q||[]).push(arguments)};})(window);</script>
 </head>
 <body>
 
@@ -105,6 +107,22 @@ function showResult() {
   localStorage.setItem('li_level', level);
   const coins = parseInt(localStorage.getItem('li_coins') || '800');
   localStorage.setItem('li_coins', coins + score * 10);
+  // Confetti!
+  if (typeof confetti !== 'undefined') {
+    if (score === quizData.length) {
+      confetti({particleCount:150,spread:100,origin:{y:0.5},colors:['#2AA46A','#F9A61B','#34d399','#fff']});
+      setTimeout(() => confetti({particleCount:80,spread:130,origin:{y:0.4},angle:60}), 500);
+      setTimeout(() => confetti({particleCount:80,spread:130,origin:{y:0.4},angle:120}), 700);
+    } else if (score >= 2) {
+      confetti({particleCount:60,spread:70,origin:{y:0.6},colors:['#2AA46A','#F9A61B']});
+    }
+  }
+  // Track quiz completion
+  try { if(window.novus) window.novus.track('quiz_completed', {score, total: quizData.length, xp}); } catch(e) {}
+  // Unlock achievements
+  const quizDone = parseInt(localStorage.getItem('li_quizzes_done') || '0') + 1;
+  localStorage.setItem('li_quizzes_done', quizDone);
+  if (score === quizData.length) localStorage.setItem('li_ach_perfect_quiz', '1');
 }
 
 function showToast(msg) {

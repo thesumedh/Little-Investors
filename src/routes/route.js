@@ -7,6 +7,7 @@ const quizController = require('../controller/quizController');
 // API routes
 route.post('/api/chat', chatController.handleChat);
 route.get('/api/quiz/:id', quizController.getQuizData);
+route.get('/api/stocks', mainController.getLiveStocks);
 
 // Page routes
 route.get('/', mainController.landing);
@@ -16,6 +17,8 @@ route.get('/chatbot', mainController.chatbot);
 route.get('/course', mainController.course);
 route.get('/quiz', quizController.getQuiz);
 route.get('/parent', mainController.parent);
+route.get('/profile', mainController.profile);
+
 
 // Catch-all
 route.all('/*', (req, res) => {

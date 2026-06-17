@@ -7,6 +7,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/main.css">
   <link rel="icon" type="image/x-icon" href="/img/penny_logo.png">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <script>window.novusSettings={token:'YOUR_NOVUS_TOKEN'};(function(n,o,v,u,s){var a=n.novus=n.novus||{};a.track=a.track||function(){(a.q=a.q||[]).push(arguments)};})(window);</script>
 </head>
 <body>
 
@@ -41,7 +43,7 @@
 </div>
 
 <div class="send-money-card">
-  <h3>💸 Send Virtual Allowance</h3>
+  <h3>💸 Send Quick Allowance</h3>
   <div class="amount-btns" id="amountBtns">
     <button class="amount-btn" onclick="selectAmount(5,this)">$5</button>
     <button class="amount-btn" onclick="selectAmount(10,this)">$10</button>
@@ -49,10 +51,19 @@
     <button class="amount-btn" onclick="selectAmount(50,this)">$50</button>
   </div>
   <p style="font-size:12px;color:#64748b;margin-bottom:12px">Selected: <strong id="selectedAmt">none</strong></p>
-  <button class="send-btn-big" onclick="sendMoney()">Send to Child 📤</button>
+  <button class="send-btn-big" onclick="sendMoney()">Send Allowance 📤</button>
 </div>
 
-<div style="padding:0 20px 12px"><div style="font-size:14px;font-weight:700;color:#1a2332;margin-bottom:12px">📋 Recent Activity</div></div>
+<div class="send-money-card" style="margin-top:12px">
+  <h3>✍️ Send Custom Reward & Note</h3>
+  <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px">
+    <input type="number" id="customAmount" placeholder="Amount (e.g. 15)" style="padding:12px;border-radius:12px;border:1px solid #e2e8f0;font-size:15px;font-weight:600">
+    <input type="text" id="customNote" placeholder="Personal Note (e.g. Cleaning your room! 🧼)" style="padding:12px;border-radius:12px;border:1px solid #e2e8f0;font-size:14px">
+    <button class="send-btn-big" onclick="sendCustomReward()" style="background:var(--navy)">Send Note & Money 🚀</button>
+  </div>
+</div>
+
+<div style="padding:16px 20px 12px 20px"><div style="font-size:14px;font-weight:700;color:#1a2332">📋 Recent Activity</div></div>
 <div class="activity-list" id="activityList">
   <div class="activity-item">
     <div class="activity-dot green">✅</div>
@@ -90,28 +101,80 @@
 <script src="/js/script.js"></script>
 <script>
 let selectedAmount = 0;
+
 function selectAmount(amt, el) {
   selectedAmount = amt;
   document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
   el.classList.add('active');
   document.getElementById('selectedAmt').textContent = '$' + amt;
 }
+
 function sendMoney() {
   if (!selectedAmount) { showToast('Please select an amount first! 👆'); return; }
   const bal = parseInt(localStorage.getItem('li_coins') || '800');
   localStorage.setItem('li_coins', bal + selectedAmount);
   document.getElementById('parentBalance').textContent = '$' + (bal + selectedAmount);
+  
+  // Add notification to localStorage
+  const notifs = JSON.parse(localStorage.getItem('li_notifications') || '[]');
+  notifs.push({
+    id: 'notif_' + Date.now(),
+    icon: '💸',
+    title: `Parent sent you $${selectedAmount}!`,
+    sub: `Allowance payout! 💸`,
+    time: 'Just now'
+  });
+  localStorage.setItem('li_notifications', JSON.stringify(notifs));
+
   const list = document.getElementById('activityList');
   const item = document.createElement('div');
   item.className = 'activity-item';
   item.style.animation = 'slideIn .3s ease';
-  item.innerHTML = `<div class="activity-dot green">💸</div><div class="activity-info"><div class="activity-title">You sent $${selectedAmount}</div><div class="activity-time">Just now</div></div><div class="activity-val" style="color:#2AA46A">+$${selectedAmount}</div>`;
+  item.innerHTML = `<div class="activity-dot green">💸</div><div class="activity-info"><div class="activity-title">Allowance sent</div><div class="activity-time">Just now</div></div><div class="activity-val" style="color:#2AA46A">+$${selectedAmount}</div>`;
   list.prepend(item);
   showToast(`✅ $${selectedAmount} sent to your child!`);
   selectedAmount = 0;
   document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('selectedAmt').textContent = 'none';
 }
+
+function sendCustomReward() {
+  const amtInput = document.getElementById('customAmount');
+  const noteInput = document.getElementById('customNote');
+  const amt = parseInt(amtInput.value);
+  const note = noteInput.value.trim() || "Allowance payout! 💸";
+  
+  if (isNaN(amt) || amt <= 0) { showToast('Please enter a valid amount! 💰'); return; }
+  
+  // Add to coins
+  const bal = parseInt(localStorage.getItem('li_coins') || '800');
+  localStorage.setItem('li_coins', bal + amt);
+  document.getElementById('parentBalance').textContent = '$' + (bal + amt);
+  
+  // Add to shared notifications array
+  const notifs = JSON.parse(localStorage.getItem('li_notifications') || '[]');
+  notifs.push({
+    id: 'notif_custom_' + Date.now(),
+    icon: '🎁',
+    title: `Parent sent you $${amt}!`,
+    sub: note,
+    time: 'Just now'
+  });
+  localStorage.setItem('li_notifications', JSON.stringify(notifs));
+  
+  // Append to Activity List
+  const list = document.getElementById('activityList');
+  const item = document.createElement('div');
+  item.className = 'activity-item';
+  item.style.animation = 'slideIn .3s ease';
+  item.innerHTML = `<div class="activity-dot green">🎁</div><div class="activity-info"><div class="activity-title">${note}</div><div class="activity-time">Just now</div></div><div class="activity-val" style="color:#2AA46A">+$${amt}</div>`;
+  list.prepend(item);
+  
+  showToast(`✅ $${amt} custom reward sent!`);
+  amtInput.value = '';
+  noteInput.value = '';
+}
+
 // Load stats from localStorage
 window.addEventListener('DOMContentLoaded', () => {
   const xp = localStorage.getItem('li_xp') || '100';

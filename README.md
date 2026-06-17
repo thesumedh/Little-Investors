@@ -1,55 +1,134 @@
-# LittleInvestors: Financial Education for Kids
+# 💰 LittleInvestors — Financial Education for Kids
 
-## 🎓 The Problem
+**Built for:** [Mind the Product — World Product Day "Everyone Ships Now" Hackathon 2026](https://devpost.com)
 
-Financial literacy is often overlooked in traditional education, leaving young individuals unprepared to manage money effectively as they grow older.
-Many children are unaware of the fundamental principles of saving, budgeting, and investing. 
-LittleInvestors addresses this issue by introducing these concepts early on in a format that is approachable, engaging, and easy to understand for young minds.
+[![Live Demo](https://img.shields.io/badge/Live-Demo-2AA46A?style=for-the-badge)](https://littleinvestors.up.railway.app)
+[![GitHub](https://img.shields.io/badge/GitHub-Repo-1a2332?style=for-the-badge)](https://github.com/thesumedh/Little-Investors)
 
-## 🌟 What is LittleInvestors?
+---
 
-LittleInvestors is an approachable investment simulation game designed to promote financial literacy, especially for people of color and women. We aim to reduce wealth disparity by practicing healthy financial practices, teaching risk, and building healthy relationships with money, and encouraging business and entrepreneurial skills. 
+## 🎯 What is LittleInvestors?
 
-What makes our app unique is that it’s a game played collaboratively by the parent and child, teaching both how to manage and communicate about finances. Parents simulate deposits into their child’s account, and the child invests that money based on real-time market data. 
+LittleInvestors is a **parent-child collaborative financial literacy app** that makes learning about money genuinely fun for kids aged 8–16.
 
+**The core insight:** Kids don't learn money from textbooks — they learn it by doing, with parents involved. LittleInvestors bridges that gap.
+
+- 👧 **Kids** learn through video lessons, interactive quizzes, and simulating real stock investments
+- 👨‍👩‍ **Parents** send virtual allowances, track progress, and collaborate on financial decisions
+- 🤖 **AI coach "Penny"** answers any money question in plain, kid-friendly language
+
+---
+
+## 🌟 Features
+
+| Feature | Description |
+|---|---|
+| 🏠 **Dashboard** | Real-time portfolio view with animated balance, stock prices, buy/sell simulator |
+| 📚 **5 Lessons** | Video-based lessons with XP rewards: Money, Saving, Spending, Risk, Investing |
+| 🏆 **Quiz System** | 3-question quizzes after each lesson, with confetti on perfect scores |
+| 🤖 **AI Chatbot** | Powered by Google Gemini — kid-friendly answers to money questions |
+| 👨‍👩‍👧 **Parent Mode** | Parents send virtual allowances, view child's progress and activity feed |
+| 📈 **Stock Simulator** | Buy/sell Apple, Amazon, Walmart with virtual coins — no real money |
+| 🎖️ **Achievements** | 7 achievement badges: Baby Buffett, Quiz Ace, Level Up, and more |
+| 🔥 **Streak System** | Daily streak tracking + XP progression system |
+
+---
 
 ## 🚀 Demo
 
-✨ You can check out our live demo at [LittleInvestors](https://littleinvestors.club)
+**Live app:** [https://littleinvestors.up.railway.app](https://littleinvestors.up.railway.app)
 
-🎥 Watch our demo video! [View Demo](https://www.youtube.com/watch?v=abxPoHVwPH0)
+**Demo video:** [YouTube](#)
 
+**Devpost submission:** [Link](#)
 
-<table style="border-collapse: collapse; border: none;">
-  <tr style="border: none;">
-    <td style="border: none; padding: 10;"><img src="demo/slide1.png" width="960"/></td>
-    <td style="border: none; padding: 10;"><img src="demo/slide2.png" width="960"/></td>
+### Screenshots
+
+<table>
+  <tr>
+    <td><b>Landing Page</b></td>
+    <td><b>Dashboard</b></td>
+    <td><b>Courses</b></td>
   </tr>
-  <tr style="border: none;">
-    <td style="border: none; padding: 10;"><img src="demo/slide4.png" width="960"/></td>
-    <td style="border: none; padding: 10;"><img src="demo/slide3.png" width="960"/></td>
+  <tr>
+    <td><img src="demo/slide1.png" width="280"/></td>
+    <td><img src="demo/slide2.png" width="280"/></td>
+    <td><img src="demo/slide3.png" width="280"/></td>
+  </tr>
+  <tr>
+    <td><b>Quiz</b></td>
+    <td><b>AI Chatbot</b></td>
+    <td><b>Parent Mode</b></td>
+  </tr>
+  <tr>
+    <td><img src="demo/slide4.png" width="280"/></td>
+    <td><img src="demo/slide5.png" width="280"/></td>
+    <td><img src="demo/slide5.png" width="280"/></td>
   </tr>
 </table>
 
-### 🔮 Future Innovations
+---
 
-At LittleInvestors, we are continually looking for ways to enhance the user experience for both children and parents. Here’s a look at what’s next for the platform:
+## 🛠️ Tech Stack
 
-<p align="center">
-<img src="demo/slide5.png" width="600" />
-</p>
-
-- **iMessage Integration**: To make it easier for parents to engage with their children about financial lessons, we plan to integrate LittleInvestors with iMessage. This will allow parents to send financial tips, reminders, and challenges directly to their kids through a platform they already use daily.
-
-- **Parental Controls for Setting Savings/Investment Goals**: Parents will soon have the ability to set custom savings and investment goals for their children. They can create tailored objectives, such as saving for a specific item or setting aside money for a future college fund. This feature aims to foster active participation from parents in teaching financial literacy.
-
-- **Expanded Investment Assets**: We plan to introduce more assets that children can "invest" in, giving them a broader perspective on saving and investing. By simulating a wider variety of financial instruments, kids will gain a more comprehensive understanding of real-world financial markets and choices.
-
-### 🧗‍♀️ Challenges and Hurdles
-
-- **Implementing a Local AI Model**: Integrating a local AI model was challenging due to balancing performance, response times, and infrastructure setup.
-- **EJS for Frontend**: Ensuring dynamic data rendered correctly with EJS required careful management of templates and state changes.
-- **Real-Time Stock Data APIs**: Accessing real-time stock data involved overcoming API limitations and ensuring consistent, accurate data integration.
+- **Backend:** Node.js + Express
+- **Frontend:** EJS templates + Vanilla CSS + Vanilla JS
+- **AI:** Google Gemini 1.5 Flash API
+- **Analytics:** Novus.ai
+- **Storage:** localStorage (client-side state)
+- **Deployment:** Railway
 
 ---
-Join us in revolutionizing financial education for the next generation! 
+
+## 🏃 Run Locally
+
+```bash
+git clone https://github.com/thesumedh/Little-Investors.git
+cd Little-Investors
+npm install
+# Add GEMINI_API_KEY to src/.env
+npm start
+# Open http://localhost:3000
+```
+
+### Environment Variables (`src/.env`)
+```
+PORT=3000
+GEMINI_API_KEY=your_key_here  # Get free at aistudio.google.com
+NOVUS_TOKEN=your_token_here   # Get at novus.ai
+```
+
+---
+
+## 📖 What I Built, Who It's For, What I Learned
+
+**What I built:** A mobile-first web app that turns financial education into a collaborative game for families. Instead of boring lectures, kids invest virtual money in real stocks after completing bite-sized lessons — with parents participating by sending virtual allowances.
+
+**Who it's for:** Parents who want to give their children a financial head start, especially in underrepresented communities where formal financial education is lacking. Kids aged 8–16 who learn best by doing.
+
+**Tools used:** Built with Node.js/Express/EJS, styled with pure CSS, AI powered by Google Gemini, analytics via Novus.ai.
+
+**What I learned:** The parent-child dynamic is the product's superpower. The moment you make financial learning a shared experience rather than homework, engagement transforms. Kids love showing their parents their quiz scores and stock picks.
+
+---
+
+## 🔮 What's Next
+
+- Real stock price API integration (Polygon.io)
+- Push notifications for parent deposits
+- iMessage integration for family finance chats
+- Expanded asset classes (crypto, ETFs, bonds)
+- Teacher mode for classrooms
+
+---
+
+## 🧗 Challenges
+
+- **Gemini API for kids**: Getting the AI to consistently give age-appropriate answers required careful system prompting and temperature tuning
+- **State without a database**: Using localStorage for all game state required careful design of the data model
+- **The parent-child UX split**: Designing one app that serves two very different user types (parent + child) without being confusing for either
+
+---
+
+*Built with ❤️ for the Mind the Product World Product Day Hackathon 2026*
+*"Everyone Ships Now" — and we shipped! 🚀*

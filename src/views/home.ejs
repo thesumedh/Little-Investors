@@ -7,6 +7,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/main.css">
   <link rel="icon" type="image/x-icon" href="/img/penny_logo.png">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <!-- Novus.ai Analytics - Replace YOUR_TOKEN with your Novus token from novus.ai -->
+  <script>window.novusSettings={token:'YOUR_NOVUS_TOKEN'};(function(n,o,v,u,s){var a=n.novus=n.novus||{};a.track=a.track||function(){(a.q=a.q||[]).push(arguments)};})(window);</script>
   <style>
     .portfolio-gain{font-size:13px;font-weight:600;color:#2AA46A;margin-top:4px}
     .section-pad{padding:0 20px}
@@ -16,7 +19,7 @@
 <body>
 
 <div id="header">
-  <a href="/home">
+  <a href="/profile">
     <div class="header-left">
       <div id="coin"><img src="/img/coin.png" id="progressing" alt="coins"></div>
       <span class="coin-amount" id="coinAmount">800</span>
@@ -40,83 +43,122 @@
   <div class="cylinder">
     <h3 class="center" id="balanceDisplay">$<span id="balanceNum">0</span></h3>
     <div class="balance-sub">
-      <div class="portfolio-gain" id="portfolioGain">📈 +$47.23 today</div>
+      <div class="portfolio-gain" id="portfolioGain">📈 +$0.00 today</div>
       <a onclick="showToast('Full history coming soon! 📊')">View Full History</a>
     </div>
   </div>
 </div>
 
 <div class="notifs-wrap" id="notifWrap">
-  <div class="notification" id="notif1">
-    <div class="notif-icon">💸</div>
-    <div class="notif-body">
-      <div class="notif-title">Mom sent you $50!</div>
-      <div class="notif-sub">5:00pm · Wednesday Oct 5</div>
-    </div>
-    <span class="notif-close" onclick="dismissNotif('notif1')">×</span>
-  </div>
-  <div class="notification" id="notif2">
-    <div class="notif-icon">🎁</div>
-    <div class="notif-body">
-      <div class="notif-title">Dad sent you $20!</div>
-      <div class="notif-sub">9:00am · Monday Oct 2</div>
-    </div>
-    <span class="notif-close" onclick="dismissNotif('notif2')">×</span>
-  </div>
+  <!-- Notifications loaded dynamically via JS -->
 </div>
 
 <div class="section-header">
-  <div class="section-title-sm">📈 Your Stocks</div>
+  <div class="section-title-sm">📈 Real Stock Simulator</div>
   <a href="/parent" class="parent-btn">👨‍👩‍👧 Parent Mode</a>
 </div>
 
 <div class="stocks-list">
+  <!-- Walmart -->
   <div class="stock" onclick="toggleStock('wmt')">
     <div class="stock-logo"><img src="/img/Walmart.png" alt="WMT"></div>
     <div class="stock-info"><div class="stock-ticker">WMT</div><div class="stock-name">Walmart</div></div>
-    <div class="stock-right"><div class="stock-price">$80.94</div><div class="stock-change green">+$0.51 (+0.6%)</div></div>
+    <div class="stock-right"><div class="stock-price" id="wmt-display-price">$80.94</div><div class="stock-change green" id="wmt-display-change">+$0.51 (+0.6%)</div></div>
   </div>
   <div class="stock-detail" id="detail-wmt">
-    <div class="stock-detail-row"><span>Price</span><span style="font-weight:600">$80.94</span></div>
+    <div class="stock-detail-row"><span>Price</span><span style="font-weight:600" id="wmt-detail-price">$80.94</span></div>
     <div class="stock-detail-row"><span>You own</span><span style="font-weight:600" id="wmt-shares">0 shares</span></div>
     <div class="stock-detail-row"><span>Value</span><span style="font-weight:600;color:#2AA46A" id="wmt-value">$0.00</span></div>
     <div class="buy-sell-btns">
-      <button class="btn-buy" onclick="buySell('wmt',80.94,'buy')">Buy 1 Share</button>
-      <button class="btn-sell" onclick="buySell('wmt',80.94,'sell')">Sell</button>
+      <button class="btn-buy" onclick="buySell('wmt','buy')">Buy 1 Share</button>
+      <button class="btn-sell" onclick="buySell('wmt','sell')">Sell</button>
     </div>
   </div>
 
+  <!-- Apple -->
   <div class="stock" onclick="toggleStock('aapl')">
     <div class="stock-logo"><img src="/img/Apple.png" alt="AAPL"></div>
     <div class="stock-info"><div class="stock-ticker">AAPL</div><div class="stock-name">Apple</div></div>
-    <div class="stock-right"><div class="stock-price">$226.80</div><div class="stock-change green">+$1.13 (+0.5%)</div></div>
+    <div class="stock-right"><div class="stock-price" id="aapl-display-price">$226.80</div><div class="stock-change green" id="aapl-display-change">+$1.13 (+0.5%)</div></div>
   </div>
   <div class="stock-detail" id="detail-aapl">
-    <div class="stock-detail-row"><span>Price</span><span style="font-weight:600">$226.80</span></div>
+    <div class="stock-detail-row"><span>Price</span><span style="font-weight:600" id="aapl-detail-price">$226.80</span></div>
     <div class="stock-detail-row"><span>You own</span><span style="font-weight:600" id="aapl-shares">0 shares</span></div>
     <div class="stock-detail-row"><span>Value</span><span style="font-weight:600;color:#2AA46A" id="aapl-value">$0.00</span></div>
     <div class="buy-sell-btns">
-      <button class="btn-buy" onclick="buySell('aapl',226.80,'buy')">Buy 1 Share</button>
-      <button class="btn-sell" onclick="buySell('aapl',226.80,'sell')">Sell</button>
+      <button class="btn-buy" onclick="buySell('aapl','buy')">Buy 1 Share</button>
+      <button class="btn-sell" onclick="buySell('aapl','sell')">Sell</button>
     </div>
   </div>
 
+  <!-- Amazon -->
   <div class="stock" onclick="toggleStock('amzn')">
     <div class="stock-logo"><img src="/img/Amazon.png" alt="AMZN"></div>
     <div class="stock-info"><div class="stock-ticker">AMZN</div><div class="stock-name">Amazon</div></div>
-    <div class="stock-right"><div class="stock-price">$186.51</div><div class="stock-change green">+$4.55 (+2.5%)</div></div>
+    <div class="stock-right"><div class="stock-price" id="amzn-display-price">$186.51</div><div class="stock-change green" id="amzn-display-change">+$4.55 (+2.5%)</div></div>
   </div>
   <div class="stock-detail" id="detail-amzn">
-    <div class="stock-detail-row"><span>Price</span><span style="font-weight:600">$186.51</span></div>
+    <div class="stock-detail-row"><span>Price</span><span style="font-weight:600" id="amzn-detail-price">$186.51</span></div>
     <div class="stock-detail-row"><span>You own</span><span style="font-weight:600" id="amzn-shares">0 shares</span></div>
     <div class="stock-detail-row"><span>Value</span><span style="font-weight:600;color:#2AA46A" id="amzn-value">$0.00</span></div>
     <div class="buy-sell-btns">
-      <button class="btn-buy" onclick="buySell('amzn',186.51,'buy')">Buy 1 Share</button>
-      <button class="btn-sell" onclick="buySell('amzn',186.51,'sell')">Sell</button>
+      <button class="btn-buy" onclick="buySell('amzn','buy')">Buy 1 Share</button>
+      <button class="btn-sell" onclick="buySell('amzn','sell')">Sell</button>
     </div>
   </div>
 
-  <div class="lock-card">
+  <!-- Premium Stocks Wrapper -->
+  <div id="premiumStocks" style="display:none">
+    <!-- Google -->
+    <div class="stock" onclick="toggleStock('googl')">
+      <div class="stock-logo" style="background:#fff"><span style="font-size:24px;font-weight:900;color:#4285F4">G</span></div>
+      <div class="stock-info"><div class="stock-ticker">GOOGL</div><div class="stock-name">Alphabet Inc.</div></div>
+      <div class="stock-right"><div class="stock-price" id="googl-display-price">$175.40</div><div class="stock-change green" id="googl-display-change">+$2.10 (+1.2%)</div></div>
+    </div>
+    <div class="stock-detail" id="detail-googl">
+      <div class="stock-detail-row"><span>Price</span><span style="font-weight:600" id="googl-detail-price">$175.40</span></div>
+      <div class="stock-detail-row"><span>You own</span><span style="font-weight:600" id="googl-shares">0 shares</span></div>
+      <div class="stock-detail-row"><span>Value</span><span style="font-weight:600;color:#2AA46A" id="googl-value">$0.00</span></div>
+      <div class="buy-sell-btns">
+        <button class="btn-buy" onclick="buySell('googl','buy')">Buy 1 Share</button>
+        <button class="btn-sell" onclick="buySell('googl','sell')">Sell</button>
+      </div>
+    </div>
+
+    <!-- Tesla -->
+    <div class="stock" onclick="toggleStock('tsla')">
+      <div class="stock-logo" style="background:#fff"><span style="font-size:24px;font-weight:900;color:#E82127">T</span></div>
+      <div class="stock-info"><div class="stock-ticker">TSLA</div><div class="stock-name">Tesla Inc.</div></div>
+      <div class="stock-right"><div class="stock-price" id="tsla-display-price">$180.20</div><div class="stock-change red" id="tsla-display-change">-$1.45 (-0.8%)</div></div>
+    </div>
+    <div class="stock-detail" id="detail-tsla">
+      <div class="stock-detail-row"><span>Price</span><span style="font-weight:600" id="tsla-detail-price">$180.20</span></div>
+      <div class="stock-detail-row"><span>You own</span><span style="font-weight:600" id="tsla-shares">0 shares</span></div>
+      <div class="stock-detail-row"><span>Value</span><span style="font-weight:600;color:#2AA46A" id="tsla-value">$0.00</span></div>
+      <div class="buy-sell-btns">
+        <button class="btn-buy" onclick="buySell('tsla','buy')">Buy 1 Share</button>
+        <button class="btn-sell" onclick="buySell('tsla','sell')">Sell</button>
+      </div>
+    </div>
+
+    <!-- Microsoft -->
+    <div class="stock" onclick="toggleStock('msft')">
+      <div class="stock-logo" style="background:#fff"><span style="font-size:24px;font-weight:900;color:#F25022">M</span></div>
+      <div class="stock-info"><div class="stock-ticker">MSFT</div><div class="stock-name">Microsoft Corp.</div></div>
+      <div class="stock-right"><div class="stock-price" id="msft-display-price">$420.10</div><div class="stock-change green" id="msft-display-change">+$3.50 (+0.8%)</div></div>
+    </div>
+    <div class="stock-detail" id="detail-msft">
+      <div class="stock-detail-row"><span>Price</span><span style="font-weight:600" id="msft-detail-price">$420.10</span></div>
+      <div class="stock-detail-row"><span>You own</span><span style="font-weight:600" id="msft-shares">0 shares</span></div>
+      <div class="stock-detail-row"><span>Value</span><span style="font-weight:600;color:#2AA46A" id="msft-value">$0.00</span></div>
+      <div class="buy-sell-btns">
+        <button class="btn-buy" onclick="buySell('msft','buy')">Buy 1 Share</button>
+        <button class="btn-sell" onclick="buySell('msft','sell')">Sell</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="lock-card" id="lockCard" onclick="unlockPremiumStocks()" style="cursor:pointer;transition:var(--tr)">
     <div style="font-size:22px">🔒</div>
     <div class="lock-text">Unlock more stocks to diversify!</div>
     <div class="lock-cost">🪙 150</div>
