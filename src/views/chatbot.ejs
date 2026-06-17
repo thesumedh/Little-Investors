@@ -80,6 +80,9 @@ body{padding-bottom:0}
 </nav>
 
 <script>
+var _conversationId = crypto.randomUUID();
+var _isSuggestedPrompt = false;
+
 function getTime() {
   return new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
 }
@@ -110,6 +113,19 @@ async function sendMessage() {
   if (!msg) return;
   input.value = '';
   document.getElementById('chips').style.display = 'none';
+
+  var promptMessageId = crypto.randomUUID();
+  var suggestedPrompt = _isSuggestedPrompt;
+  _isSuggestedPrompt = false;
+
+  pendo.trackAgent("prompt", {
+    agentId: "nHcoFNPq2gtNrC9kAnQkqum0zD4",
+    conversationId: _conversationId,
+    messageId: promptMessageId,
+    content: msg,
+    suggestedPrompt: suggestedPrompt
+  });
+
   addMsg(msg, 'user');
   const typing = showTyping();
   try {
@@ -121,6 +137,14 @@ async function sendMessage() {
     const data = await res.json();
     typing.remove();
     addMsg(data.message, 'ai');
+
+    pendo.trackAgent("agent_response", {
+      agentId: "nHcoFNPq2gtNrC9kAnQkqum0zD4",
+      conversationId: _conversationId,
+      messageId: crypto.randomUUID(),
+      content: data.message,
+      modelUsed: "gemini-1.5-flash"
+    });
   } catch(e) {
     typing.remove();
     addMsg("Oops! I'm having trouble connecting. Try again in a moment! 🔄", 'ai');
@@ -128,6 +152,7 @@ async function sendMessage() {
 }
 
 function sendPreset(q) {
+  _isSuggestedPrompt = true;
   document.getElementById('chatInput').value = q;
   sendMessage();
 }
