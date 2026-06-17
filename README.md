@@ -36,11 +36,9 @@ LittleInvestors is a **parent-child collaborative financial literacy app** that 
 
 ## 🚀 Demo
 
-**Live app:** [https://littleinvestors.up.railway.app](https://littleinvestors.up.railway.app)
+**Live app:** https://little-investors-delta.vercel.app
 
 **Demo video:** [YouTube](#)
-
-**Devpost submission:** [Link](#)
 
 ### Screenshots
 
