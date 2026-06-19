@@ -71,7 +71,7 @@
 <!-- Today's learning quick card -->
 <div id="todayLearnWrap" style="padding:0 20px;margin-bottom:4px"></div>
 
-<div class="section-header">
+<div class="section-header" id="stocksSection">
   <div class="section-title-sm">📈 Stock Simulator</div>
   <a href="/parent" class="parent-btn">👨‍👩‍👧 Parent</a>
 </div>
@@ -254,14 +254,159 @@
   </div>
 </div>
 
-<nav class="menu">
+<nav class="menu" id="menuContainer">
   <a href="/home" class="active"><img src="/img/menu (3).png" alt="home"><span class="menu-label">Home</span></a>
   <a href="/courses"><img src="/img/menu (4).png" alt="courses"><span class="menu-label">Learn</span></a>
   <a href="/chatbot"><img src="/img/menu (2).png" alt="chat"><span class="menu-label">Chat</span></a>
   <a href="/parent"><img src="/img/menu (1).png" alt="parent"><span class="menu-label">Parent</span></a>
 </nav>
 
+<!-- Custom In-App Guide: Onboarding Tour Overlay -->
+<div id="tourOverlay" style="display:none;position:fixed;inset:0;background:rgba(10,15,30,0.75);backdrop-filter:blur(4px);z-index:9999;align-items:center;justify-content:center;font-family:'Inter',sans-serif">
+  <div id="tourCard" style="background:#fff;border-radius:24px;padding:32px 28px;width:90%;max-width:380px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.1);text-align:left;position:relative;animation:slideIn .3s ease">
+    <button onclick="closeTour()" style="position:absolute;top:20px;right:20px;background:none;border:none;font-size:22px;cursor:pointer;color:#64748b;line-height:1">×</button>
+    
+    <div id="tourStepBadge" style="background:rgba(42,164,106,0.1);color:#2AA46A;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:16px">Step 1 of 3</div>
+    <h3 id="tourTitle" style="font-size:20px;font-weight:800;color:#1a2332;margin:0 0 10px 0;display:flex;align-items:center;gap:8px">Welcome to LittleInvestors! 🪙</h3>
+    <p id="tourText" style="font-size:14px;color:#64748b;line-height:1.6;margin:0 0 24px 0">Let's take a quick 3-step tour to learn how to manage and invest virtual money as a family.</p>
+    
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <button onclick="closeTour()" style="background:none;border:none;color:#64748b;font-size:14px;font-weight:600;cursor:pointer">Skip</button>
+      <button id="tourNextBtn" onclick="nextTourStep()" style="background:linear-gradient(135deg,#2AA46A,#1b7a4e);color:#fff;border:none;border-radius:12px;padding:12px 24px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 10px 15px -3px rgba(42,164,106,0.3)">Next Step →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Custom In-App Guide: Feedback Survey Card -->
+<div id="feedbackWidget" style="display:none;position:fixed;bottom:90px;right:20px;background:#fff;border-radius:20px;padding:24px;width:280px;box-shadow:0 10px 30px rgba(0,0,0,0.15);border:1px solid #e2e8f0;z-index:999;font-family:'Inter',sans-serif;animation:slideIn .3s ease">
+  <button onclick="closeFeedbackWidget()" style="position:absolute;top:14px;right:16px;background:none;border:none;font-size:20px;cursor:pointer;color:#94a3b8;line-height:1">×</button>
+  <div style="font-size:24px;margin-bottom:8px">🌟</div>
+  <div style="font-size:15px;font-weight:800;color:#1a2332;margin-bottom:6px">Enjoying LittleInvestors?</div>
+  <div style="font-size:13px;color:#64748b;margin-bottom:14px;line-height:1.4">Rate your learning experience:</div>
+  
+  <div style="display:flex;gap:8px;margin-bottom:16px" id="starContainer">
+    <span class="star-rating-item" onclick="submitFeedback(1)" style="font-size:26px;cursor:pointer;filter:grayscale(1);transition:transform 0.15s">⭐</span>
+    <span class="star-rating-item" onclick="submitFeedback(2)" style="font-size:26px;cursor:pointer;filter:grayscale(1);transition:transform 0.15s">⭐</span>
+    <span class="star-rating-item" onclick="submitFeedback(3)" style="font-size:26px;cursor:pointer;filter:grayscale(1);transition:transform 0.15s">⭐</span>
+    <span class="star-rating-item" onclick="submitFeedback(4)" style="font-size:26px;cursor:pointer;filter:grayscale(1);transition:transform 0.15s">⭐</span>
+    <span class="star-rating-item" onclick="submitFeedback(5)" style="font-size:26px;cursor:pointer;filter:grayscale(1);transition:transform 0.15s">⭐</span>
+  </div>
+  <div id="feedbackStatus" style="font-size:12px;color:#2AA46A;font-weight:700;display:none">Thanks for your rating! ❤️</div>
+</div>
+
+<!-- Floating Onboarding Tour Replay Button -->
+<button onclick="startTour()" style="position:fixed;bottom:90px;left:20px;background:#1a2332;color:#fff;border:none;border-radius:50%;width:42px;height:42px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.25);cursor:pointer;z-index:998;font-size:20px;transition:transform 0.2s" title="Replay Onboarding Tour" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+  💡
+</button>
+
 <div class="toast" id="toast"></div>
 <script src="/js/script.js"></script>
+<script>
+let currentTourStep = 1;
+const tourSteps = [
+  {
+    badge: "Step 1 of 3",
+    title: "Welcome to LittleInvestors! 🪙",
+    text: "This is your family financial dashboard. At the top, you can see your current virtual Coins, level progression, and daily streak. Complete lessons and quizzes to earn more coins!",
+    targetId: "header",
+    nextText: "Next Step →"
+  },
+  {
+    badge: "Step 2 of 3",
+    title: "Trade Real Stocks 📈",
+    text: "Below, you can see real stock market simulators like Apple, Amazon, and Walmart. Tap any stock to view its dynamic historical trend chart, buy/sell shares, and grow your virtual portfolio!",
+    targetId: "stocksSection",
+    nextText: "Next Step →"
+  },
+  {
+    badge: "Step 3 of 3",
+    title: "Ask Penny AI Coach 🤖",
+    text: "Need financial help or explanations? Head over to the Chat tab in the menu below to ask Penny, our Gemini-powered AI money coach. She can simplify any financial concept for you!",
+    targetId: "menuContainer",
+    nextText: "Finish Tour 🎉"
+  }
+];
+
+function startTour() {
+  currentTourStep = 1;
+  document.getElementById('tourOverlay').style.display = 'flex';
+  renderTourStep();
+}
+
+function renderTourStep() {
+  const step = tourSteps[currentTourStep - 1];
+  document.getElementById('tourStepBadge').textContent = step.badge;
+  document.getElementById('tourTitle').innerHTML = step.title;
+  document.getElementById('tourText').textContent = step.text;
+  document.getElementById('tourNextBtn').textContent = step.nextText;
+  
+  // Highlight target element
+  document.querySelectorAll('.tour-highlight').forEach(el => el.classList.remove('tour-highlight'));
+  const target = document.getElementById(step.targetId);
+  if (target) {
+    target.classList.add('tour-highlight');
+    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function nextTourStep() {
+  if (currentTourStep >= tourSteps.length) {
+    closeTour();
+  } else {
+    currentTourStep++;
+    renderTourStep();
+  }
+}
+
+function closeTour() {
+  document.getElementById('tourOverlay').style.display = 'none';
+  document.querySelectorAll('.tour-highlight').forEach(el => el.classList.remove('tour-highlight'));
+  localStorage.setItem('li_tour_completed', '1');
+  
+  if (typeof pendo !== 'undefined') {
+    pendo.track('onboarding_tour_completed');
+  }
+  
+  // Show feedback widget 3 seconds after tour completes
+  setTimeout(() => {
+    if (!localStorage.getItem('li_feedback_submitted')) {
+      document.getElementById('feedbackWidget').style.display = 'block';
+    }
+  }, 2000);
+}
+
+function closeFeedbackWidget() {
+  document.getElementById('feedbackWidget').style.display = 'none';
+}
+
+function submitFeedback(rating) {
+  const stars = document.querySelectorAll('.star-rating-item');
+  stars.forEach((s, idx) => {
+    if (idx < rating) {
+      s.style.filter = 'none';
+    } else {
+      s.style.filter = 'grayscale(1)';
+    }
+  });
+  
+  document.getElementById('feedbackStatus').style.display = 'block';
+  localStorage.setItem('li_feedback_submitted', '1');
+  
+  if (typeof pendo !== 'undefined') {
+    pendo.track('feedback_submitted', { rating: rating });
+  }
+  
+  setTimeout(() => {
+    closeFeedbackWidget();
+  }, 1500);
+}
+
+// Auto-start tour for new visitors
+window.addEventListener('DOMContentLoaded', () => {
+  if (!localStorage.getItem('li_tour_completed')) {
+    setTimeout(startTour, 1200);
+  }
+});
+</script>
 </body>
 </html>

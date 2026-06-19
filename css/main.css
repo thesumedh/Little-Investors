@@ -237,3 +237,12 @@ input[type="number"]:focus,input[type="text"]:focus{border-color:var(--green)!im
 .section-pad{padding:0 20px}
 .notifs-wrap{padding:0 20px;margin-bottom:4px}
 .portfolio-gain{font-size:13px;font-weight:600;color:#34d399;margin-top:4px}
+.tour-highlight {
+  position: relative !important;
+  z-index: 10000 !important;
+  background: #fff !important;
+  box-shadow: 0 0 0 10px #fff, 0 0 0 9999px rgba(10,15,30,0.6) !important;
+  border-radius: 12px;
+  pointer-events: none !important;
+  transition: all 0.3s ease;
+}
