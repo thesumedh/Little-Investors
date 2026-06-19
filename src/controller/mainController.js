@@ -228,6 +228,6 @@ const getMarketNews = async (req, res) => {
     res.json({ success: true, news: shuffled.slice(0, 4) });
 };
 
-const simulate = async (req, res) => res.render('simulate');
+const simulate = async (req, res) => res.render('telemetry-test');
 
 module.exports = { home, landing, courses, chatbot, course, parent, profile, getLiveStocks, getMarketNews, getQuiz, simulate };

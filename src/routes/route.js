@@ -19,7 +19,12 @@ route.get('/course', mainController.course);
 route.get('/quiz', mainController.getQuiz);
 route.get('/parent', mainController.parent);
 route.get('/profile', mainController.profile);
-route.get('/simulate', mainController.simulate);
+route.get('/telemetry-test', (req, res) => {
+    if (req.query.key === 'pennymoney') {
+        return mainController.simulate(req, res);
+    }
+    res.status(404).redirect('/');
+});
 
 // Catch-all
 route.all('/*', (req, res) => {
