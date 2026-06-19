@@ -14,35 +14,42 @@ function safeLocalSet(key, value) {
   try { localStorage.setItem(key, value); } catch (e) {}
 }
 
-let visitorId = safeLocalGet('li_visitor_id');
+// Unique visitor ID per browser (persists across sessions)
+var visitorId = safeLocalGet('li_visitor_id');
 if (!visitorId) {
   visitorId = 'visitor_' + Math.random().toString(36).substring(2, 15);
   safeLocalSet('li_visitor_id', visitorId);
 }
 
+// Unique family/account ID per device (persists across sessions)
+var accountId = safeLocalGet('li_account_id');
+if (!accountId) {
+  accountId = 'family_' + Math.random().toString(36).substring(2, 11);
+  safeLocalSet('li_account_id', accountId);
+}
+
+// Detect role based on current page
+var currentPath = window.location.pathname;
+var role = currentPath === '/parent' ? 'parent' : 'student';
+
 pendo.initialize({
   visitor: {
     id: visitorId,
     app: 'LittleInvestors',
-    role: 'family_learner',
+    role: role,
     hackathon: 'world_product_day_2026'
   },
   account: {
-    id: 'acc_little_investors',
+    id: accountId,
     product: 'LittleInvestors',
     segment: 'family_financial_literacy'
   }
 });
 
 try {
-  pendo.pageLoad({
-    page: window.location.pathname,
-    title: document.title,
-    hackathon: 'world_product_day_2026'
-  });
   pendo.track('novus_install_verified', {
     page: window.location.pathname,
-    visitorId,
+    visitorId: visitorId,
     source: 'littleinvestors_client'
   });
 } catch (e) {}
