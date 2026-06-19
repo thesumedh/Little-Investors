@@ -3,10 +3,20 @@ const LS = {
   get: (k, def) => { try { const v = localStorage.getItem('li_' + k); return v === null ? def : JSON.parse(v); } catch { return def; } },
   set: (k, v) => localStorage.setItem('li_' + k, JSON.stringify(v))
 };
+const DEFAULT_COINS = 800;
+const DEFAULT_STREAK = 30;
 
 // ===== TRACKING =====
 function track(event, props = {}) {
-  try { if (window.pendo) window.pendo.track(event, props); } catch (e) {}
+  try {
+    if (window.pendo) {
+      window.pendo.track(event, {
+        page: window.location.pathname,
+        app: 'LittleInvestors',
+        ...props
+      });
+    }
+  } catch (e) {}
 }
 
 // ===== TOAST =====
@@ -63,7 +73,7 @@ function showAchievementPopup(a) {
 
 // ===== HEADER =====
 function initHeader() {
-  const coins = LS.get('coins', 800);
+  const coins = LS.get('coins', DEFAULT_COINS);
   const xp = LS.get('xp', 0);
   const level = Math.floor(xp / 200);
   const progressPct = (xp % 200) / 200 * 100;
@@ -89,9 +99,9 @@ function initHeader() {
   }
 
   const streakEl = document.getElementById('streakCount');
-  if (streakEl) streakEl.textContent = LS.get('streak', 30);
+  if (streakEl) streakEl.textContent = LS.get('streak', DEFAULT_STREAK);
 
-  if (coins >= 500) unlockAchievement('saver');
+  if (coins >= 500 && LS.get('lessons_completed', 0) > 0) unlockAchievement('saver');
 }
 
 // ===== NOTIFICATIONS =====
@@ -100,7 +110,7 @@ function loadNotifications() {
   if (!wrap) return;
   let notifs = LS.get('notifications', []);
   if (notifs.length === 0) {
-    notifs = [{ id: 'notif_welcome', icon: '👋', title: 'Welcome to LittleInvestors!', sub: 'Start a lesson to earn your first coins 🪙', time: 'Just now' }];
+    notifs = [{ id: 'notif_welcome', icon: '👋', title: 'Welcome to LittleInvestors!', sub: 'Start a lesson, pass the quiz, then invest your first virtual dollars.', time: 'Just now' }];
     LS.set('notifications', notifs);
   }
   wrap.innerHTML = '';
@@ -149,7 +159,7 @@ function loadGoalCard() {
   if (!wrap) return;
   const goal = LS.get('savings_goal', null);
   if (!goal) return;
-  const coins = LS.get('coins', 800);
+  const coins = LS.get('coins', DEFAULT_COINS);
   const pct = Math.min(100, Math.round((coins / goal.amount) * 100));
   wrap.innerHTML = `<div class="goal-card">
     <div class="goal-header">
@@ -188,7 +198,7 @@ function toggleStock(ticker) {
 }
 
 // ===== LIVE STOCKS =====
-let PRICES = { wmt: 80.94, aapl: 226.80, amzn: 186.51, googl: 175.40, tsla: 180.20, msft: 420.10 };
+let PRICES = { wmt: 91.20, aapl: 213.45, amzn: 196.80, googl: 183.90, tsla: 247.60, msft: 442.30 };
 
 async function loadLiveStocks() {
   try {
@@ -290,6 +300,30 @@ function calculatePortfolioValue() {
   }
 }
 
+function updateMissionCard() {
+  const lessonsCompleted = LS.get('lessons_completed', 0);
+  const completedLessons = JSON.parse(localStorage.getItem('li_completed_lessons') || '[]').length;
+  const lessonDone = lessonsCompleted > 0 || completedLessons > 0;
+  const quizDone = parseInt(localStorage.getItem('li_quizzes_done') || '0') > 0;
+  const invested = LS.get('total_shares', 0) > 0;
+  const steps = [
+    ['missionLearn', lessonDone],
+    ['missionQuiz', quizDone],
+    ['missionInvest', invested]
+  ];
+  let done = 0;
+  steps.forEach(([id, isDone]) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.toggle('done', isDone);
+    if (isDone) done++;
+  });
+  const fill = document.getElementById('missionFill');
+  const count = document.getElementById('missionCount');
+  if (fill) fill.style.width = Math.round((done / steps.length) * 100) + '%';
+  if (count) count.textContent = done + '/3';
+}
+
 function loadShareInfo(ticker) {
   const shares = LS.get('shares_' + ticker, 0);
   const el = document.getElementById(ticker + '-shares');
@@ -299,7 +333,7 @@ function loadShareInfo(ticker) {
 }
 
 function buySell(ticker, action) {
-  const coins = LS.get('coins', 800);
+  const coins = LS.get('coins', DEFAULT_COINS);
   const price = PRICES[ticker];
   const shares = LS.get('shares_' + ticker, 0);
   const prevShares = LS.get('total_shares', 0);
@@ -321,6 +355,7 @@ function buySell(ticker, action) {
   loadShareInfo(ticker);
   calculatePortfolioValue();
   initHeader();
+  updateMissionCard();
 }
 
 // ===== PREMIUM STOCKS =====
@@ -338,7 +373,7 @@ function checkPremiumStocksLock() {
 }
 
 function unlockPremiumStocks() {
-  const coins = LS.get('coins', 800);
+  const coins = LS.get('coins', DEFAULT_COINS);
   if (coins < 150) { showToast('Need 150 coins to unlock! 🪙 Keep learning.'); return; }
   LS.set('coins', Math.round((coins - 150) * 100) / 100);
   LS.set('stocks_unlocked', true);
@@ -365,7 +400,7 @@ function completeLesson(xp) {
   const newLevel = Math.floor(newXP / 200);
   LS.set('xp', newXP);
   LS.set('level', newLevel);
-  LS.set('coins', LS.get('coins', 800) + Math.floor(xp / 10));
+  LS.set('coins', LS.get('coins', DEFAULT_COINS) + Math.floor(xp / 10));
   if (newLevel > prevLevel) { unlockAchievement('level_up'); launchConfetti(); }
   const lc = LS.get('lessons_completed', 0) + 1;
   LS.set('lessons_completed', lc);
@@ -382,6 +417,7 @@ document.addEventListener('DOMContentLoaded', () => {
   checkPremiumStocksLock();
   loadGoalCard();
   loadTodayLearnCard();
+  updateMissionCard();
   track('page_view', { page: window.location.pathname });
 
   document.addEventListener('click', (e) => {

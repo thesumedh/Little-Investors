@@ -77,17 +77,68 @@
       height: 8px;
       border-radius: 50%;
     }
+  .pin-dot{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.3);background:transparent;transition:all .15s ease}
+  .pin-dot.filled{background:#2AA46A;border-color:#2AA46A;box-shadow:0 0 10px rgba(42,164,106,.6);transform:scale(1.1)}
+  .pin-dot.error{background:#EF4444;border-color:#EF4444;box-shadow:0 0 10px rgba(239,68,68,.5)}
+  .keypad-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:50%;width:72px;height:72px;color:#fff;font-size:22px;font-weight:600;cursor:pointer;transition:all .15s ease;display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;-webkit-tap-highlight-color:transparent;user-select:none}
+  .keypad-btn:hover{background:rgba(255,255,255,.15)}
+  .keypad-btn:active{transform:scale(.92);background:rgba(42,164,106,.35)}
+  @keyframes pinShake{0%,100%{transform:translateX(0)}15%{transform:translateX(-10px)}30%{transform:translateX(10px)}45%{transform:translateX(-7px)}60%{transform:translateX(7px)}75%{transform:translateX(-4px)}90%{transform:translateX(4px)}}
+  .pin-shake{animation:pinShake .5s cubic-bezier(.36,.07,.19,.97) both}
   </style>
 </head>
 <body>
 
+<!-- Parent Passcode Overlay -->
+<div id="passcodeOverlay" style="position:fixed;inset:0;background:linear-gradient(160deg,#0a0f1e 0%,#1a2332 60%,#0f2027 100%);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center">
+  <div style="text-align:center;max-width:300px;width:100%;padding:0 32px">
+    <div style="font-size:52px;margin-bottom:20px;transition:all .3s" id="lockEmoji">🔒</div>
+    <h2 style="color:#fff;font-size:24px;font-weight:800;margin-bottom:8px;letter-spacing:-.5px">Parent Mode</h2>
+    <p style="color:rgba(255,255,255,.5);font-size:14px;margin-bottom:40px;line-height:1.6" id="pinStatusMsg">Enter your 4-digit PIN to<br>access the Family Dashboard</p>
+    <div style="display:flex;gap:20px;justify-content:center;margin-bottom:48px" id="pinDotsRow">
+      <div class="pin-dot" id="dot0"></div>
+      <div class="pin-dot" id="dot1"></div>
+      <div class="pin-dot" id="dot2"></div>
+      <div class="pin-dot" id="dot3"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,72px);gap:14px;justify-content:center">
+      <button class="keypad-btn" onclick="pinPress('1')">1</button>
+      <button class="keypad-btn" onclick="pinPress('2')">2</button>
+      <button class="keypad-btn" onclick="pinPress('3')">3</button>
+      <button class="keypad-btn" onclick="pinPress('4')">4</button>
+      <button class="keypad-btn" onclick="pinPress('5')">5</button>
+      <button class="keypad-btn" onclick="pinPress('6')">6</button>
+      <button class="keypad-btn" onclick="pinPress('7')">7</button>
+      <button class="keypad-btn" onclick="pinPress('8')">8</button>
+      <button class="keypad-btn" onclick="pinPress('9')">9</button>
+      <button class="keypad-btn" onclick="pinClear()" style="font-size:13px;font-weight:700;letter-spacing:.5px">CLR</button>
+      <button class="keypad-btn" onclick="pinPress('0')">0</button>
+      <button class="keypad-btn" onclick="pinDelete()" style="font-size:22px">⌫</button>
+    </div>
+    <p style="color:rgba(255,255,255,.22);font-size:12px;margin-top:32px">First time? Default PIN is <strong style="color:rgba(255,255,255,.4)">0000</strong></p>
+    <a href="/home" style="display:inline-block;margin-top:14px;color:rgba(255,255,255,.3);font-size:13px;font-weight:500;text-decoration:none">← Back to App</a>
+  </div>
+</div>
+
+<!-- Change PIN Modal -->
+<div id="changePinModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:10000;align-items:flex-end;justify-content:center">
+  <div style="background:#fff;border-radius:24px 24px 0 0;padding:28px 24px;width:100%;max-width:430px">
+    <div style="font-size:18px;font-weight:800;color:#1a2332;margin-bottom:6px">🔑 Change Parent PIN</div>
+    <div style="font-size:13px;color:#64748b;margin-bottom:20px">Enter a new 4-digit PIN for Parent Mode</div>
+    <input type="tel" id="newPinInput" placeholder="• • • •" maxlength="4" inputmode="numeric" pattern="[0-9]*" style="width:100%;padding:14px;border-radius:12px;border:1.5px solid #e2e8f0;font-size:28px;letter-spacing:14px;text-align:center;margin-bottom:16px;font-weight:800;font-family:'Inter',sans-serif" oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,4)">
+    <button onclick="saveNewPin()" style="width:100%;padding:14px;background:linear-gradient(135deg,#2AA46A,#1b7a4e);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif">Save New PIN 🔐</button>
+    <button onclick="document.getElementById('changePinModal').style.display='none'" style="width:100%;padding:12px;background:#f8fafc;color:#64748b;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;margin-top:8px;font-family:'Inter',sans-serif">Cancel</button>
+  </div>
+</div>
+
 <div class="parent-header">
   <a href="/home" style="color:rgba(255,255,255,0.7);text-decoration:none;font-size:14px;display:inline-flex;align-items:center;gap:6px;margin-bottom:12px;font-weight:600">‹ Back to App</a>
-  <div style="display:flex;justify-content:between;align-items:center;width:100%">
+  <div style="display:flex;justify-content:space-between;align-items:center;width:100%">
     <div>
       <div class="parent-badge">👨‍👩‍👧 Family Dashboard</div>
       <h1 style="color:#fff;font-size:22px;font-weight:800;letter-spacing:-0.5px">Parent Control Center</h1>
     </div>
+    <button onclick="showChangePinModal()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);color:#fff;padding:8px 16px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s" onmouseover="this.style.background='rgba(255,255,255,.25)'" onmouseout="this.style.background='rgba(255,255,255,.15)'">🔑 PIN</button>
   </div>
 </div>
 
@@ -176,16 +227,7 @@
 
 <div style="padding:16px 20px 8px 20px"><div style="font-size:13px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px">📋 Family Activity History</div></div>
 <div class="activity-list" id="activityList">
-  <div class="activity-item">
-    <div class="activity-dot green">✅</div>
-    <div class="activity-info"><div class="activity-title">Completed: What is Money?</div><div class="activity-time">Today · +100 XP</div></div>
-    <div class="activity-val" style="color:var(--green)">+100 XP</div>
-  </div>
-  <div class="activity-item">
-    <div class="activity-dot gold">🎯</div>
-    <div class="activity-info"><div class="activity-title">Quiz: What is Money?</div><div class="activity-time">Today · 3/3 correct</div></div>
-    <div class="activity-val" style="color:var(--gold)">100%</div>
-  </div>
+  <!-- dynamically loaded from localStorage below -->
 </div>
 
 <div style="padding:20px">
@@ -206,6 +248,54 @@
 <div class="toast" id="toast"></div>
 <script src="/js/script.js"></script>
 <script>
+// ===== PARENT PIN SYSTEM =====
+let pinEntry = '';
+function pinPress(d){if(pinEntry.length>=4)return;pinEntry+=d;renderPinDots();if(pinEntry.length===4)setTimeout(verifyPin,200);}
+function pinDelete(){pinEntry=pinEntry.slice(0,-1);renderPinDots();}
+function pinClear(){pinEntry='';renderPinDots();}
+function renderPinDots(state){
+  for(let i=0;i<4;i++){
+    const d=document.getElementById('dot'+i);if(!d)continue;
+    d.classList.remove('filled','error');
+    if(state==='error')d.classList.add('error');
+    else if(state==='success'||i<pinEntry.length)d.classList.add('filled');
+  }
+}
+function verifyPin(){
+  const stored=localStorage.getItem('li_parent_pin')||'0000';
+  if(pinEntry===stored){
+    renderPinDots('success');
+    document.getElementById('lockEmoji').textContent='✅';
+    document.getElementById('pinStatusMsg').textContent='Welcome back! 🎉';
+    document.getElementById('pinStatusMsg').style.color='#34d399';
+    sessionStorage.setItem('li_parent_session','1');
+    setTimeout(()=>{const ov=document.getElementById('passcodeOverlay');ov.style.transition='opacity .35s ease';ov.style.opacity='0';setTimeout(()=>ov.style.display='none',350);},600);
+  }else{
+    renderPinDots('error');
+    const row=document.getElementById('pinDotsRow');row.classList.add('pin-shake');setTimeout(()=>row.classList.remove('pin-shake'),550);
+    document.getElementById('pinStatusMsg').textContent='Incorrect PIN — try again.';
+    document.getElementById('pinStatusMsg').style.color='#EF4444';
+    setTimeout(()=>{document.getElementById('pinStatusMsg').textContent='Enter your 4-digit PIN to access the Family Dashboard';document.getElementById('pinStatusMsg').style.color='rgba(255,255,255,.5)';pinEntry='';renderPinDots();},1400);
+  }
+}
+document.addEventListener('keydown',e=>{
+  const ov=document.getElementById('passcodeOverlay');
+  if(!ov||ov.style.display==='none')return;
+  if(e.key>='0'&&e.key<='9')pinPress(e.key);
+  else if(e.key==='Backspace')pinDelete();
+  else if(e.key==='Escape')window.location.href='/home';
+});
+function showChangePinModal(){document.getElementById('changePinModal').style.display='flex';}
+function saveNewPin(){
+  const val=document.getElementById('newPinInput').value.trim();
+  if(!/^\d{4}$/.test(val)){showToast('Please enter exactly 4 digits! 🔑');return;}
+  localStorage.setItem('li_parent_pin',val);
+  document.getElementById('changePinModal').style.display='none';
+  document.getElementById('newPinInput').value='';
+  showToast('✅ PIN changed! Use it next time you open Parent Mode.');
+}
+// ===== END PIN SYSTEM =====
+
 let selectedAmount = 0;
 let choreAmount = 0;
 let choreNote = "";
@@ -321,6 +411,12 @@ function loadPortfolioStats() {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
+  // Skip PIN if already authenticated this browser session
+  if (sessionStorage.getItem('li_parent_session') === '1') {
+    const ov = document.getElementById('passcodeOverlay');
+    if (ov) ov.style.display = 'none';
+  }
+
   const xp = localStorage.getItem('li_xp') || '0';
   const level = localStorage.getItem('li_level') || '0';
   const coins = localStorage.getItem('li_coins') || '800';
@@ -346,6 +442,43 @@ window.addEventListener('DOMContentLoaded', () => {
   }
   
   loadPortfolioStats();
+
+  // ── Dynamic Activity History ──
+  const list = document.getElementById('activityList');
+  const lessonTitles = {1:'What is Money?',2:'Saving — Stack Your Coins',3:'Spending Wisely',4:'Understanding Risk',5:'Investing Basics'};
+  const lessonXP = {1:100,2:120,3:140,4:160,5:200};
+  const activities = [];
+
+  // Lesson completions
+  const completedLessons = JSON.parse(localStorage.getItem('li_completed_lessons') || '[]');
+  completedLessons.forEach(id => {
+    activities.push({ dot: '✅', dotClass: 'green', title: 'Completed: ' + (lessonTitles[id] || 'Lesson ' + id), time: 'Lesson · +' + (lessonXP[id] || 100) + ' XP', val: '+' + (lessonXP[id] || 100) + ' XP', valColor: 'var(--green)' });
+    activities.push({ dot: '🎯', dotClass: 'gold', title: 'Quiz: ' + (lessonTitles[id] || 'Lesson ' + id), time: 'Quiz completed', val: '+XP', valColor: 'var(--gold)' });
+  });
+
+  // Allowance transfers from notifications
+  const notifs = JSON.parse(localStorage.getItem('li_notifications') || '[]');
+  notifs.filter(n => n.icon === '💸').forEach(n => {
+    activities.push({ dot: '💸', dotClass: 'green', title: n.title, time: n.time || 'Recently', val: '', valColor: 'var(--green)' });
+  });
+
+  // Stock purchases (if total_shares > 0)
+  const totalShares = parseInt(localStorage.getItem('li_total_shares') || '0');
+  if (totalShares > 0) {
+    activities.push({ dot: '📈', dotClass: 'green', title: 'Bought stocks in simulator', time: totalShares + ' share' + (totalShares !== 1 ? 's' : '') + ' owned', val: totalShares + ' shares', valColor: 'var(--navy)' });
+  }
+
+  if (activities.length === 0) {
+    list.innerHTML = '<div style="padding:16px 20px;text-align:center;color:var(--gray);font-size:14px">No activity yet — your child hasn\'t started learning! 📚</div>';
+  } else {
+    list.innerHTML = '';
+    activities.slice(-6).reverse().forEach(a => {
+      const item = document.createElement('div');
+      item.className = 'activity-item';
+      item.innerHTML = `<div class="activity-dot ${a.dotClass}">${a.dot}</div><div class="activity-info"><div class="activity-title">${a.title}</div><div class="activity-time">${a.time}</div></div><div class="activity-val" style="color:${a.valColor}">${a.val}</div>`;
+      list.appendChild(item);
+    });
+  }
 });
 </script>
 </body>

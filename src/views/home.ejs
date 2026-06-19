@@ -71,6 +71,7 @@
 <!-- Today's learning quick card -->
 <div id="todayLearnWrap" style="padding:0 20px;margin-bottom:4px"></div>
 
+<div id="stocksTourContainer" style="width:100%">
 <div class="section-header" id="stocksSection">
   <div class="section-title-sm">📈 Stock Simulator</div>
   <a href="/parent" class="parent-btn">👨‍👩‍👧 Parent</a>
@@ -233,6 +234,7 @@
     <div class="lock-cost">🪙 150</div>
   </div>
 </div>
+</div>
 
 <!-- Live Market News -->
 <div style="padding:0 20px;margin-top:16px;margin-bottom:80px">
@@ -257,13 +259,16 @@
 <nav class="menu" id="menuContainer">
   <a href="/home" class="active"><img src="/img/menu (3).png" alt="home"><span class="menu-label">Home</span></a>
   <a href="/courses"><img src="/img/menu (4).png" alt="courses"><span class="menu-label">Learn</span></a>
-  <a href="/chatbot"><img src="/img/menu (2).png" alt="chat"><span class="menu-label">Chat</span></a>
+  <a href="/chatbot" id="chatMenuTab"><img src="/img/menu (2).png" alt="chat"><span class="menu-label">Chat</span></a>
   <a href="/parent"><img src="/img/menu (1).png" alt="parent"><span class="menu-label">Parent</span></a>
 </nav>
 
+<!-- Custom In-App Guide: Onboarding Tour Backdrop -->
+<div id="tourBackdrop" style="display:none;position:fixed;inset:0;background:rgba(10,15,30,0.65);backdrop-filter:blur(3px);z-index:9998"></div>
+
 <!-- Custom In-App Guide: Onboarding Tour Overlay -->
-<div id="tourOverlay" style="display:none;position:fixed;inset:0;background:rgba(10,15,30,0.75);backdrop-filter:blur(4px);z-index:9999;align-items:center;justify-content:center;font-family:'Inter',sans-serif">
-  <div id="tourCard" style="background:#fff;border-radius:24px;padding:32px 28px;width:90%;max-width:380px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.1);text-align:left;position:relative;animation:slideIn .3s ease">
+<div id="tourOverlay" style="display:none;position:fixed;inset:0;z-index:10000;pointer-events:none;font-family:'Inter',sans-serif">
+  <div id="tourCard" style="background:#fff;border-radius:24px;padding:32px 28px;width:90%;max-width:380px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.4);border:1px solid #f1f5f9;text-align:left;position:absolute;left:50%;transform:translateX(-50%);pointer-events:auto;animation:slideIn .3s ease">
     <button onclick="closeTour()" style="position:absolute;top:20px;right:20px;background:none;border:none;font-size:22px;cursor:pointer;color:#64748b;line-height:1">×</button>
     
     <div id="tourStepBadge" style="background:rgba(42,164,106,0.1);color:#2AA46A;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:16px">Step 1 of 3</div>
@@ -322,14 +327,15 @@ const tourSteps = [
     badge: "Step 3 of 3",
     title: "Ask Penny AI Coach 🤖",
     text: "Need financial help or explanations? Head over to the Chat tab in the menu below to ask Penny, our Gemini-powered AI money coach. She can simplify any financial concept for you!",
-    targetId: "menuContainer",
+    targetId: "chatMenuTab",
     nextText: "Finish Tour 🎉"
   }
 ];
 
 function startTour() {
   currentTourStep = 1;
-  document.getElementById('tourOverlay').style.display = 'flex';
+  document.getElementById('tourBackdrop').style.display = 'block';
+  document.getElementById('tourOverlay').style.display = 'block';
   renderTourStep();
 }
 
@@ -340,10 +346,42 @@ function renderTourStep() {
   document.getElementById('tourText').textContent = step.text;
   document.getElementById('tourNextBtn').textContent = step.nextText;
   
+  // Clean up previous highlights & dimming
+  document.querySelectorAll('.tour-highlight, .tour-highlight-menu').forEach(el => {
+    el.classList.remove('tour-highlight', 'tour-highlight-menu');
+  });
+  document.querySelectorAll('.tour-dim').forEach(el => {
+    el.classList.remove('tour-dim');
+  });
+  const menuContainer = document.getElementById('menuContainer');
+  if (menuContainer) {
+    menuContainer.style.removeProperty('z-index');
+  }
+
+  // Adjust dialogue position absolutely to prevent overlaps
+  const card = document.getElementById('tourCard');
+  if (currentTourStep === 1) {
+    card.style.top = 'auto';
+    card.style.bottom = '100px';
+  } else if (currentTourStep === 2) {
+    card.style.top = 'auto';
+    card.style.bottom = '100px';
+  } else if (currentTourStep === 3) {
+    card.style.top = '100px';
+    card.style.bottom = 'auto';
+  }
+
   // Highlight target element
-  document.querySelectorAll('.tour-highlight').forEach(el => el.classList.remove('tour-highlight'));
   const target = document.getElementById(step.targetId);
   if (target) {
+    if (step.targetId === 'chatMenuTab') {
+      // Stacking Context: Raise parent container and dim sibling links
+      if (menuContainer) {
+        menuContainer.style.setProperty('z-index', '9999', 'important');
+        const siblings = menuContainer.querySelectorAll('a:not(#chatMenuTab)');
+        siblings.forEach(s => s.classList.add('tour-dim'));
+      }
+    }
     target.classList.add('tour-highlight');
     target.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
@@ -359,15 +397,25 @@ function nextTourStep() {
 }
 
 function closeTour() {
+  document.getElementById('tourBackdrop').style.display = 'none';
   document.getElementById('tourOverlay').style.display = 'none';
-  document.querySelectorAll('.tour-highlight').forEach(el => el.classList.remove('tour-highlight'));
+  document.querySelectorAll('.tour-highlight, .tour-highlight-menu').forEach(el => {
+    el.classList.remove('tour-highlight', 'tour-highlight-menu');
+  });
+  document.querySelectorAll('.tour-dim').forEach(el => {
+    el.classList.remove('tour-dim');
+  });
+  const menuContainer = document.getElementById('menuContainer');
+  if (menuContainer) {
+    menuContainer.style.removeProperty('z-index');
+  }
   localStorage.setItem('li_tour_completed', '1');
   
   if (typeof pendo !== 'undefined') {
     pendo.track('onboarding_tour_completed');
   }
   
-  // Show feedback widget 3 seconds after tour completes
+  // Show feedback widget 2 seconds after tour completes
   setTimeout(() => {
     if (!localStorage.getItem('li_feedback_submitted')) {
       document.getElementById('feedbackWidget').style.display = 'block';

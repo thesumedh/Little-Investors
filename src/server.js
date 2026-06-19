@@ -1,9 +1,7 @@
-const express = require('express');
-require('dotenv').config(); // Load environment variables from .env file
+require('dotenv').config({ path: './src/.env' });
 const app = require('./app');
 
-// Start the server
-const port = 3000;
+const port = process.env.PORT || 3000;
 app.listen(port, function() {
-  console.log('Bubble node app running on port ' + port);
+  console.log('LittleInvestors running on port ' + port);
 });

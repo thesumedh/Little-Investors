@@ -56,11 +56,11 @@
   ]; %>
 
   <% lessonList.forEach(function(l) { %>
-    <a class="lesson-card" id="lesson<%= l.id %>card" style="text-decoration:none; display:flex">
+    <a class="lesson-card" id="lesson<%= l.id %>card" href="/course?lesson=<%= l.id %>" style="text-decoration:none; display:flex">
       <div class="lesson-icon"><%= l.icon %></div>
       <div class="lesson-body">
         <div class="lesson-tag <%= l.tagClass %>" id="lesson<%= l.id %>tag"><%= l.tag %></div>
-        <div class="lesson-title" style="color:var(--dark)"><%= l.title %></div>
+        <div class="lesson-title"><%= l.title %></div>
         <div class="lesson-meta"><%= l.meta %></div>
       </div>
       <span class="lesson-arrow">›</span>
@@ -124,10 +124,11 @@
       tag.style.color = '#f9a61b';
       nextAssigned = true;
     } else {
+      card.href = l.href;
       card.style.opacity = '0.6';
       card.style.cursor = 'default';
-      card.removeAttribute('href');
-      card.onclick = function(e) { e.preventDefault(); showToast('Complete previous lessons first! 📚'); };
+      card.style.pointerEvents = 'none';
+      card.addEventListener('click', function(e) { e.preventDefault(); showToast('Complete previous lessons first! 📚'); });
       tag.textContent = '🔒 Locked';
       tag.style.color = '#94a3b8';
     }

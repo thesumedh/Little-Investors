@@ -28,11 +28,11 @@ const FALLBACK_RESPONSES = {
 
 function getFallback(message) {
     const lower = message.toLowerCase();
+    if (lower.includes('stock') || lower.includes('share')) return FALLBACK_RESPONSES.stock;
     if (lower.includes('allowance')) return FALLBACK_RESPONSES.allowance;
     if (lower.includes('save') || lower.includes('saving')) return FALLBACK_RESPONSES.save;
     if (lower.includes('spend') || lower.includes('spending')) return FALLBACK_RESPONSES.spend;
     if (lower.includes('invest') || lower.includes('stock')) return FALLBACK_RESPONSES.invest;
-    if (lower.includes('stock') || lower.includes('share')) return FALLBACK_RESPONSES.stock;
     if (lower.includes('budget') || lower.includes('plan')) return FALLBACK_RESPONSES.budget;
     if (lower.includes('money') || lower.includes('cash')) return FALLBACK_RESPONSES.money;
     if (lower.includes('piggy') || lower.includes('bank')) return FALLBACK_RESPONSES.piggy;
@@ -45,7 +45,10 @@ exports.handleChat = async (req, res) => {
             return res.status(400).json({ success: false, error: 'Message is required' });
         }
 
-        const { message } = req.body;
+        const message = String(req.body.message).trim().slice(0, 500);
+        if (!message) {
+            return res.status(400).json({ success: false, error: 'Message is required' });
+        }
         const apiKey = process.env.GEMINI_API_KEY;
 
         if (!apiKey) {
@@ -77,7 +80,7 @@ exports.handleChat = async (req, res) => {
         const aiText = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
         if (!aiText) throw new Error('Empty Gemini response');
 
-        return res.json({ success: true, message: aiText.trim() });
+        return res.json({ success: true, message: aiText.trim(), source: 'gemini' });
 
     } catch (error) {
         console.error('Chat error:', error.message);

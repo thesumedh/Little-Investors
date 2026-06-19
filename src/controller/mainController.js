@@ -6,13 +6,21 @@ let stockCacheTime = 0;
 const STOCK_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
 const FALLBACK_STOCKS = {
-    aapl: { price: 226.80, change: 1.13, changePercent: 0.50, direction: 'up', name: 'Apple Inc.', logo: '🍎' },
-    amzn: { price: 186.51, change: 4.55, changePercent: 2.50, direction: 'up', name: 'Amazon.com', logo: '📦' },
-    wmt:  { price: 80.94,  change: 0.51, changePercent: 0.60, direction: 'up', name: 'Walmart Inc.', logo: '🏪' },
-    tsla: { price: 180.20, change: -1.45, changePercent: -0.80, direction: 'down', name: 'Tesla Inc.', logo: '⚡' },
-    googl:{ price: 175.40, change: 2.10, changePercent: 1.21, direction: 'up', name: 'Alphabet Inc.', logo: '🔍' },
-    msft: { price: 420.10, change: 3.50, changePercent: 0.84, direction: 'up', name: 'Microsoft Corp.', logo: '💻' }
+    aapl: { price: 213.45, change: 1.23, changePercent: 0.58, direction: 'up', name: 'Apple Inc.', logo: '🍎' },
+    amzn: { price: 196.80, change: 3.20, changePercent: 1.65, direction: 'up', name: 'Amazon.com', logo: '📦' },
+    wmt:  { price: 91.20,  change: 0.45, changePercent: 0.50, direction: 'up', name: 'Walmart Inc.', logo: '🏪' },
+    tsla: { price: 247.60, change: -4.80, changePercent: -1.90, direction: 'down', name: 'Tesla Inc.', logo: '⚡' },
+    googl:{ price: 183.90, change: 2.10, changePercent: 1.15, direction: 'up', name: 'Alphabet Inc.', logo: '🔍' },
+    msft: { price: 442.30, change: 5.70, changePercent: 1.30, direction: 'up', name: 'Microsoft Corp.', logo: '💻' }
 };
+
+// Day-seeded variation so simulated prices change daily but stay consistent within a day
+function getDailyVariation(key) {
+    const d = new Date();
+    const seed = (d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate()) * 31 + key.charCodeAt(0) * 17;
+    const rand = Math.sin(seed * 127.1 + 311.7) * 43758.5453;
+    return (rand - Math.floor(rand) - 0.5) * 0.030; // ±1.5% max variation
+}
 
 const STOCK_SYMBOLS = { aapl: 'AAPL', amzn: 'AMZN', wmt: 'WMT', tsla: 'TSLA', googl: 'GOOGL', msft: 'MSFT' };
 
@@ -210,7 +218,22 @@ const getLiveStocks = async (req, res) => {
         const data = await fetchYahooStock(sym);
         result[key] = data
             ? { ...data, name: FALLBACK_STOCKS[key].name, logo: FALLBACK_STOCKS[key].logo }
-            : FALLBACK_STOCKS[key];
+            : (() => {
+                // Simulate realistic daily price movement when Yahoo Finance is unavailable
+                const base = FALLBACK_STOCKS[key];
+                const variation = getDailyVariation(key);
+                const priceChange = Math.round(base.price * variation * 100) / 100;
+                const newPrice = Math.round((base.price + priceChange) * 100) / 100;
+                const changePercent = Math.round(variation * 10000) / 100;
+                return {
+                    ...base,
+                    price: newPrice,
+                    change: priceChange,
+                    changePercent,
+                    direction: priceChange >= 0 ? 'up' : 'down',
+                    simulated: true
+                };
+            })();
     });
 
     await Promise.allSettled(fetchPromises);
