@@ -90,9 +90,7 @@ LittleInvestors is **fully instrumented with Novus.ai** — every meaningful use
 
 **🌐 App:** https://little-investors-delta.vercel.app/
 
-**🎥 Demo video:** [YouTube](#) *(under 3 minutes)*
-
-**📝 Devpost:** [Submission link](#)
+**🎥 Demo video:** [YouTube](https://youtu.be/Ye68fxPDplA) 
 
 ### Screenshots
 
