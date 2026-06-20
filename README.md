@@ -81,7 +81,8 @@ LittleInvestors is **fully instrumented with Novus.ai** — every meaningful use
 - `role: 'parent'` vs `role: 'student'` — auto-detected from URL
 - Unique persistent family account ID per device
 
-> 📸 *[Novus dashboard screenshot — add before Devpost submission]*
+> 📸<img width="1878" height="878" alt="Screenshot 2026-06-20 090010" src="https://github.com/user-attachments/assets/e19c0032-00ab-481b-8cda-5d0a11919a75" />
+
 
 ---
 
@@ -108,12 +109,10 @@ LittleInvestors is **fully instrumented with Novus.ai** — every meaningful use
   </tr>
   <tr>
     <td align="center"><b>Quiz</b></td>
-    <td align="center"><b>Penny AI Coach</b></td>
-    <td align="center"><b>Parent Mode</b></td>
+    <td align="center"><b>Upcoming</b></td>
   </tr>
   <tr>
     <td><img src="demo/slide4.png" width="280"/></td>
-    <td><img src="demo/slide5.png" width="280"/></td>
     <td><img src="demo/slide5.png" width="280"/></td>
   </tr>
 </table>
